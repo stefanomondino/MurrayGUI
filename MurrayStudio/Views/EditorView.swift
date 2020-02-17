@@ -12,23 +12,16 @@ import Files
 import MurrayKit
 
 struct EditorView: View {
+    @EnvironmentObject var specController: BoneSpecsController
     @ObservedObject var controller: BoneItemController
-    @State private var toggleRight: Bool = false
-    
+
     var body: some View {
 
         VStack {
-            HStack {
-                Button(action:{ self.toggleRight.toggle() }) {
-                    Text("Preview")
-                }
-                .padding()
-                .background(self.toggleRight ? Color.blue : Color.clear)
-                }
-
+            
             HStack {
                 SourceCodeView(text: self.$controller.text)
-                if self.toggleRight {
+                if self.specController.showPreview {
                     SourceCodeView(text: self.$controller.resolved)
                 }
             }

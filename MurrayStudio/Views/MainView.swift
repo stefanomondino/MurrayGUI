@@ -11,10 +11,14 @@ import SwiftUI
 struct MainView: View {
     @EnvironmentObject var specsController: BoneSpecsController
     var body: some View {
+        GeometryReader{ g in
         HSplitView {
-            BoneSpecsView()
-            BoneGroupView()
-            ContextView()
+            BoneSpecsView().frame(idealWidth: 300)
+            BoneGroupView().frame(idealWidth: g.size.width, maxWidth: .infinity, maxHeight: .infinity)
+
+
+            ContextView().frame(idealWidth: 300)
+        }
         }
     }
 }

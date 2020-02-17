@@ -12,34 +12,34 @@ import MurrayKit
 
 struct BoneFilesView: View {
     @EnvironmentObject var controller: BoneSpecsController
-    var item: ObjectReference<BoneItem>?
+    //    var item: ObjectReference<BoneItem>?
 
     var body: some View {
 
         GeometryReader { _ in
             HStack {
                 List(selection: self.$controller.selectedFile) {
-                    //                if self.controller.files(for: self.item).isEmpty {
-                    //                    Text("No file found in current group")
-                    //                } else {
-                    Section(header: Text("Files")) {
-                        ForEach(self.controller.files(for: self.item), id:\.self) { file in
+                    ForEach(self.controller.items(for: self.controller.selectedGroup), id: \.self) { item in
+
+                        Section(header: Text(item.object.name)) {
+                            ForEach(self.controller.files(for: item), id:\.self) { file in
                             Text(file.name)
                         }
-                        //                    }
                     }
                 }
-                .frame(width: 200)
+            }
+            .frame(width: 200)
 
-                if self.controller.currentItemController != nil {
-                    EditorView(controller: self.controller.currentItemController!)
-                } else {
-                    Text("Select a file")
-                    Spacer()
-                }
+            if self.controller.currentItemController != nil {
+                EditorView(controller: self.controller.currentItemController!)
+            } else {
+                Spacer()
+                Text("Select a file")
+                Spacer()
             }
         }
     }
+}
 }
 
 struct BoneFilesView_Previews: PreviewProvider {

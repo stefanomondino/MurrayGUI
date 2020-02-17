@@ -17,19 +17,26 @@ struct BoneGroupView: View {
         GeometryReader { _ in
             if self.controller.selectedGroup != nil {
                 VStack {
-                    Text(self.controller.selectedGroup?.group.name ?? "")
-                TabView {
-                    ForEach(self.controller.currentItems, id: \.object.name) { item in
-                        BoneFilesView(item: item)
-                            .tabItem { Text(item.object.name) }
+                    HStack {
+                        Text(self.controller.selectedGroup?.group.name ?? "")
+                        Spacer()
+                        Button(action: { self.controller.showPreview.toggle() }) {
+                            Text("Show/Hide preview")
+                        }
                     }
-                }
+                    .padding()
+                    BoneFilesView()
+//                    TabView {
+//                        ForEach(self.controller.currentItems, id: \.self) { item in
+//                            BoneFilesView(item: item)
+//                                .tag(item)
+//                                .tabItem { Text(item.object.name) }
+//                        }
+//                    }
                 }
             } else {
                 Text("Select a group")
             }
-
-
         }
     }
 }

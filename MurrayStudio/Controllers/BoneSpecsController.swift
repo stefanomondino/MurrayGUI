@@ -65,14 +65,20 @@ class BoneSpecsController: ObservableObject {
 
     private var cancellables: [AnyCancellable] = []
 
+    @Published var showPreview: Bool = true
+
     var selectedGroup: GroupWithSpec? {
-        willSet { objectWillChange.send() }
-        didSet { self.currentItems = items(for: selectedGroup)}
+//        willSet { objectWillChange.send() }
+        didSet {
+            self.currentItems = items(for: selectedGroup)
+            self.selectedFile = nil
+        }
     }
 
     var selectedFile: File? {
-        willSet { objectWillChange.send() }
-        didSet { self.currentItemController = BoneItemController(file: selectedFile, spec: self.selectedGroup?.spec)}
+        didSet {
+            self.currentItemController = BoneItemController(file: selectedFile, spec: self.selectedGroup?.spec)
+        }
     }
 
     @Published var currentItems: [ObjectReference<BoneItem>] = []
