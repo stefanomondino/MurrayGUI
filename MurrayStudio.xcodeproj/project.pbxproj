@@ -3,26 +3,48 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		70A817A223FAADF00068A00F /* ContextView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A123FAADF00068A00F /* ContextView.swift */; };
+		70A817A423FAB59D0068A00F /* BoneGroupView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A323FAB59D0068A00F /* BoneGroupView.swift */; };
+		70A817A623FAB7E50068A00F /* BoneFilesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A523FAB7E50068A00F /* BoneFilesView.swift */; };
+		70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A723FACFE10068A00F /* SourceCodeView.swift */; };
+		70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A923FAD9B10068A00F /* EditorView.swift */; };
+		70A817AC23FAD9FF0068A00F /* BoneItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817AB23FAD9FF0068A00F /* BoneItemController.swift */; };
 		70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */; };
-		70D8E7D423FA9DEC00A89C70 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D323FA9DEC00A89C70 /* ContentView.swift */; };
 		70D8E7D623FA9DEE00A89C70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */; };
 		70D8E7D923FA9DEE00A89C70 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */; };
 		70D8E7DC23FA9DEE00A89C70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7DA23FA9DEE00A89C70 /* Main.storyboard */; };
+		70D8E7E623FA9E3D00A89C70 /* MurrayKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70D8E7E523FA9E3D00A89C70 /* MurrayKit */; };
+		70D8E7E923FAA20D00A89C70 /* Sourceful in Frameworks */ = {isa = PBXBuildFile; productRef = 70D8E7E823FAA20D00A89C70 /* Sourceful */; };
+		70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */; };
+		70D8E7EE23FAA35400A89C70 /* BoneSpecsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */; };
+		70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */; };
+		70D8E7F523FAA79E00A89C70 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F423FAA79E00A89C70 /* MainWindow.swift */; };
+		70D8E7FA23FAA83C00A89C70 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F923FAA83C00A89C70 /* MainView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		70A817A123FAADF00068A00F /* ContextView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextView.swift; sourceTree = "<group>"; };
+		70A817A323FAB59D0068A00F /* BoneGroupView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneGroupView.swift; sourceTree = "<group>"; };
+		70A817A523FAB7E50068A00F /* BoneFilesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneFilesView.swift; sourceTree = "<group>"; };
+		70A817A723FACFE10068A00F /* SourceCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceCodeView.swift; sourceTree = "<group>"; };
+		70A817A923FAD9B10068A00F /* EditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
+		70A817AB23FAD9FF0068A00F /* BoneItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneItemController.swift; sourceTree = "<group>"; };
 		70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MurrayStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		70D8E7D323FA9DEC00A89C70 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
 		70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		70D8E7DB23FA9DEE00A89C70 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		70D8E7DD23FA9DEE00A89C70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		70D8E7DE23FA9DEE00A89C70 /* MurrayStudio.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MurrayStudio.entitlements; sourceTree = "<group>"; };
+		70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
+		70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsView.swift; sourceTree = "<group>"; };
+		70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsController.swift; sourceTree = "<group>"; };
+		70D8E7F423FAA79E00A89C70 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
+		70D8E7F923FAA83C00A89C70 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -30,6 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70D8E7E623FA9E3D00A89C70 /* MurrayKit in Frameworks */,
+				70D8E7E923FAA20D00A89C70 /* Sourceful in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -55,13 +79,15 @@
 		70D8E7D023FA9DEC00A89C70 /* MurrayStudio */ = {
 			isa = PBXGroup;
 			children = (
+				70D8E7F623FAA7E500A89C70 /* Controllers */,
+				70D8E7EA23FAA23000A89C70 /* Utilities */,
 				70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */,
-				70D8E7D323FA9DEC00A89C70 /* ContentView.swift */,
 				70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */,
 				70D8E7DA23FA9DEE00A89C70 /* Main.storyboard */,
 				70D8E7DD23FA9DEE00A89C70 /* Info.plist */,
 				70D8E7DE23FA9DEE00A89C70 /* MurrayStudio.entitlements */,
 				70D8E7D723FA9DEE00A89C70 /* Preview Content */,
+				70D8E7EF23FAA35800A89C70 /* Views */,
 			);
 			path = MurrayStudio;
 			sourceTree = "<group>";
@@ -72,6 +98,38 @@
 				70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */,
 			);
 			path = "Preview Content";
+			sourceTree = "<group>";
+		};
+		70D8E7EA23FAA23000A89C70 /* Utilities */ = {
+			isa = PBXGroup;
+			children = (
+				70D8E7F423FAA79E00A89C70 /* MainWindow.swift */,
+				70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */,
+				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
+			);
+			path = Utilities;
+			sourceTree = "<group>";
+		};
+		70D8E7EF23FAA35800A89C70 /* Views */ = {
+			isa = PBXGroup;
+			children = (
+				70D8E7F923FAA83C00A89C70 /* MainView.swift */,
+				70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */,
+				70A817A123FAADF00068A00F /* ContextView.swift */,
+				70A817A323FAB59D0068A00F /* BoneGroupView.swift */,
+				70A817A523FAB7E50068A00F /* BoneFilesView.swift */,
+				70A817A923FAD9B10068A00F /* EditorView.swift */,
+			);
+			path = Views;
+			sourceTree = "<group>";
+		};
+		70D8E7F623FAA7E500A89C70 /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */,
+				70A817AB23FAD9FF0068A00F /* BoneItemController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -90,6 +148,10 @@
 			dependencies = (
 			);
 			name = MurrayStudio;
+			packageProductDependencies = (
+				70D8E7E523FA9E3D00A89C70 /* MurrayKit */,
+				70D8E7E823FAA20D00A89C70 /* Sourceful */,
+			);
 			productName = MurrayStudio;
 			productReference = 70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */;
 			productType = "com.apple.product-type.application";
@@ -118,6 +180,10 @@
 				Base,
 			);
 			mainGroup = 70D8E7C523FA9DEC00A89C70;
+			packageReferences = (
+				70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */,
+				70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */,
+			);
 			productRefGroup = 70D8E7CF23FA9DEC00A89C70 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -145,8 +211,18 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70D8E7D423FA9DEC00A89C70 /* ContentView.swift in Sources */,
+				70A817A223FAADF00068A00F /* ContextView.swift in Sources */,
+				70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */,
+				70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */,
+				70A817A423FAB59D0068A00F /* BoneGroupView.swift in Sources */,
+				70A817A623FAB7E50068A00F /* BoneFilesView.swift in Sources */,
+				70D8E7FA23FAA83C00A89C70 /* MainView.swift in Sources */,
+				70A817AC23FAD9FF0068A00F /* BoneItemController.swift in Sources */,
+				70D8E7F523FAA79E00A89C70 /* MainWindow.swift in Sources */,
 				70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */,
+				70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */,
+				70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */,
+				70D8E7EE23FAA35400A89C70 /* BoneSpecsView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -285,6 +361,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MurrayStudio/Preview Content\"";
+				DEVELOPMENT_TEAM = 6T384SC3AF;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MurrayStudio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -292,7 +369,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = it.synesthesia.MurrayStudio;
+				PRODUCT_BUNDLE_IDENTIFIER = it.synesthesia.MurrayGUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -306,6 +383,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MurrayStudio/Preview Content\"";
+				DEVELOPMENT_TEAM = 6T384SC3AF;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = MurrayStudio/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -313,7 +391,7 @@
 					"@executable_path/../Frameworks",
 				);
 				MACOSX_DEPLOYMENT_TARGET = 10.15;
-				PRODUCT_BUNDLE_IDENTIFIER = it.synesthesia.MurrayStudio;
+				PRODUCT_BUNDLE_IDENTIFIER = it.synesthesia.MurrayGUI;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 			};
@@ -341,6 +419,38 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/synesthesia-it/Murray";
+			requirement = {
+				branch = v2;
+				kind = branch;
+			};
+		};
+		70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "git@github.com:twostraws/Sourceful.git";
+			requirement = {
+				branch = master;
+				kind = branch;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		70D8E7E523FA9E3D00A89C70 /* MurrayKit */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */;
+			productName = MurrayKit;
+		};
+		70D8E7E823FAA20D00A89C70 /* Sourceful */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */;
+			productName = Sourceful;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 70D8E7C623FA9DEC00A89C70 /* Project object */;
 }
