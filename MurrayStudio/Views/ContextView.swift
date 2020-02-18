@@ -16,6 +16,7 @@ struct ContextView: View {
     var body: some View {
 
         GeometryReader { _ in
+            VStack {
             Form {
                 ForEach(self.controller.contextManager.array.indices, id:\.self) { index in
                     HStack(spacing: 2) {
@@ -23,8 +24,10 @@ struct ContextView: View {
                         TextField(self.controller.contextManager.array[index].key, text: self.$controller.contextManager.array[index].value)
                     }
                 }
-            }.padding()
+            }
             Spacer()
+            Button(action: { self.controller.run() }, label:  { Text("RUN") })
+            }.padding()
         }
     }
 }

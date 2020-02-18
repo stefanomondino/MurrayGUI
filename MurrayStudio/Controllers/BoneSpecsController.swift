@@ -202,5 +202,12 @@ class BoneSpecsController: ObservableObject {
         ?? []
     }
 
-
+    func run() {
+        guard let name = self.selectedGroup?.group.name else { return  }
+        let context = contextManager.array
+            .reduce([String: String]()){ a, t in
+                a.merging([t.key: t.value], uniquingKeysWith: {$1})
+        }
+        try? self.pipeline?.execute(boneName: name, with: context)
+    }
 }
