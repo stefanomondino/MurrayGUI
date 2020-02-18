@@ -427,7 +427,7 @@
 /* Begin XCRemoteSwiftPackageReference section */
 		70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/synesthesia-it/Murray";
+			repositoryURL = "git@github.com:synesthesia-it/Murray";
 			requirement = {
 				branch = v2;
 				kind = branch;
