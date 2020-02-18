@@ -26,7 +26,7 @@ struct SourceCodeView: NSViewRepresentable {
     }
     func updateNSView(_ nsView: SyntaxTextView, context: NSViewRepresentableContext<SourceCodeView>) {
 //        nsView.delegate = context.coordinator
-//        nsView.layout()
+//        nsView.layout()s
         if nsView.text != text {
             nsView.text = text
         }

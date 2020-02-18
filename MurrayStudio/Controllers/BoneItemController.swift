@@ -20,18 +20,41 @@ class BoneItemController: ObservableObject {
 
     @Published var text: String = "" {
         didSet {
-            self.resolved = (try? FileTemplate(fileContents: text, context: BoneContext(["name": "Test"])).render()) ?? "error"
+            self.resolved = resolve()
 
         }
     }
-    @Published var resolved: String = ""
+    @Published var resolved: String = "" {
+        willSet { objectWillChange.send() }
+    }
 
-    init?(file: File?, spec: ObjectReference<BoneSpec>?) {
+    private var context: BoneContext = BoneContext([:]) {
+        didSet {
+            self.resolved = resolve()
+        }
+    }
+    private var cancellables: [AnyCancellable] = []
+    private func resolve() -> String {
+        (try? FileTemplate(fileContents: text, context: context).render()) ?? "error"
+    }
+    init?(file: File?, spec: ObjectReference<BoneSpec>?, context: ObservableArray<ContextPair>) {
         guard let file = file, let spec = spec else { return nil }
         self.file = file
 //        self.item = item
         self.spec = spec
 
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
+
+        context.objectWillChange
+            .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
+            .prepend(())
+            .map { context.array
+            .reduce([String: String]()){ a, t in
+                a.merging([t.key: t.value], uniquingKeysWith: {$1})
+            }
+            }
+            .map { BoneContext($0, environment: [:])}
+            .sink { [weak self] in self?.context = $0}
+    .store(in: &cancellables)
     }
 }

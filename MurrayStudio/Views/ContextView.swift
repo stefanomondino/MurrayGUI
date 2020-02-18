@@ -17,17 +17,18 @@ struct ContextView: View {
 
         GeometryReader { _ in
             Form {
-            ForEach(self.controller.contextPairs, id:\.self) { pair in
-                HStack(spacing:2) {
-                    Text(pair.key)
-                    TextField(pair.key, text: pair.currentValue)
-                }
+                ForEach(self.controller.contextManager.array.indices, id:\.self) { index in
+                    HStack(spacing: 2) {
+                        Text(self.controller.contextManager.array[index].key)
+                        TextField(self.controller.contextManager.array[index].key, text: self.$controller.contextManager.array[index].value)
+                    }
                 }
             }.padding()
             Spacer()
         }
     }
 }
+
 
 struct ContextView_Previews: PreviewProvider {
     static var previews: some View {
