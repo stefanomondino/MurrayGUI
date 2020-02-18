@@ -16,8 +16,15 @@ struct ContextView: View {
     var body: some View {
 
         GeometryReader { _ in
-  
-            Text("context")
+            Form {
+            ForEach(self.controller.contextPairs, id:\.self) { pair in
+                HStack(spacing:2) {
+                    Text(pair.key)
+                    TextField(pair.key, text: pair.currentValue)
+                }
+                }
+            }.padding()
+            Spacer()
         }
     }
 }
