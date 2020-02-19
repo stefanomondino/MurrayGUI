@@ -12,49 +12,16 @@ import Combine
 import Files
 import SwiftUI
 
-class ContextManager: ObservableObject {
+class ItemsController: ObservableObject {
+    @Published var controllers: [BoneItemController]
 
-    @Published var environment:[ContextPair] = [] {
-        willSet { objectWillChange.send() }
-    }
-    @Published var local:[ContextPair] = [] {
-        willSet { objectWillChange.send() }
-    }
-    func reset() {
-        if let murrayFile = murrayFile {
-            self.local = [ContextPair(key: murrayFile.mainPlaceholder ?? MurrayFile.defaultPlaceholder, value: "")]
-            self.environment = murrayFile.environment.compactMap { ContextPair(key: $0.key, value: $0.value as! String) }
-        }
-    }
-    var context: BoneContext {
-        BoneContext(local.dictionary, environment: environment.dictionary)
-    }
-    init(environment: [ContextPair] = [], local: [ContextPair] = []) {
-        self.murrayFile = nil
-        self.environment = environment
-        self.local = local
+    init(controllers: [BoneItemController]) {
+        self.controllers = controllers
     }
 
-    let murrayFile: MurrayFile?
-
-    init(murrayFile: MurrayFile) {
-        self.murrayFile = murrayFile
-        reset()
+    func controller(for file: File) -> BoneItemController? {
+        controllers.first(where: { $0.file == file })
     }
-}
-
-extension Array where Element == ContextPair {
-    var dictionary: [String: String] {
-        return reduce([:]) {
-            $0.merging([$1.key: $1.value]) { $1 }
-        }
-    }
-}
-
-struct ContextPair: Identifiable, Hashable {
-    var id: String { key }
-    var key: String
-    var value: String
 }
 
 extension ObjectReference: Equatable {
@@ -114,7 +81,7 @@ class BoneSpecsController: ObservableObject {
     @Published var showPreview: Bool = true
 
     var selectedGroup: GroupWithSpec? {
-//        willSet { objectWillChange.send() }
+        //        willSet { objectWillChange.send() }
         didSet {
             self.currentItems = items(for: selectedGroup)
             self.selectedFile = nil
@@ -123,17 +90,49 @@ class BoneSpecsController: ObservableObject {
 
     var selectedFile: File? {
         didSet {
-            self.currentItemController = BoneItemController(file: selectedFile, spec: self.selectedGroup?.spec, context: contextManager)
+            //            self.currentItemController = BoneItemController(file: selectedFile, spec: self.selectedGroup?.spec, context: contextManager)
+            if let file = selectedFile {
+                self.currentItemController = itemManager.controller(for: file)!
+            }
+            self.objectWillChange.send()
+            self.currentItemController.objectWillChange.send()
+
         }
     }
 
-    @Published var currentItems: [ObjectReference<BoneItem>] = []
-    @Published var currentItemController: BoneItemController?
+    @Published var currentItems: [ObjectReference<BoneItem>] = [] {
+        didSet {
+            self.itemManager = ItemsController(controllers: currentItems
+                .compactMap { self.files(for: $0) }
+                .flatMap { $0 }
+                .compactMap { file in BoneItemController(file: file, spec: self.selectedGroup?.spec, context: contextManager) })
+            objectWillChange.send()
+        }
+    }
+
+    var currentItemCancellables: [AnyCancellable] = []
+    @ObservedObject var currentItemController: BoneItemController = BoneItemController() {
+        willSet { objectWillChange.send() }
+        didSet {
+//            currentItemCancellables = []
+            currentItemController
+                .objectWillChange
+                .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
+                .sink {[weak self] in self?.objectWillChange.send() }
+                .store(in: &currentItemCancellables)
+
+        }
+    }
     @ObservedObject var contextManager: ContextManager
+
+    @Published var itemManager: ItemsController = ItemsController(controllers: []) {
+        willSet { objectWillChange.send() }
+    }
 
     var isEmpty: Bool {
         specs.isEmpty
     }
+
     static var empty: BoneSpecsController {
         BoneSpecsController()
     }
@@ -182,14 +181,36 @@ class BoneSpecsController: ObservableObject {
         item?.object.paths
             .map { $0.from }
             .compactMap { try? item?.file.parent?.file(at: $0) }
-        ?? []
+            ?? []
     }
     func resetContext() {
         self.contextManager.reset()
     }
     func run() {
-        guard let name = self.selectedGroup?.group.name else { return  }
+        guard
+            let pipeline = self.pipeline,
+            let spec = self.selectedGroup?.spec,
+            let group = self.selectedGroup,
+            let name = self.selectedGroup?.group.name else { return  }
 
-        try? self.pipeline?.execute(boneName: name, with: contextManager.context.context)
+        let items = try self.items(for: group)
+        let context = self.contextManager.context
+        try? items.forEach { item in
+
+            try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
+
+            try item.object.paths.forEach({ (path) in
+                try pipeline.transform(path: path, sourceFolder: folder, with: context)
+            })
+            try item.object.replacements.forEach({ replacement in
+                try pipeline.replace(from: replacement, sourceFolder: folder, with: context)
+            })
+
+            try pipeline.pluginManager.execute(phase: .afterItemReplace(item: item, context: context), from: self.folder)
+        }
+
+
+
+        //        try? self.pipeline?.execute(boneName: name, with: contextManager.context.context)
     }
 }

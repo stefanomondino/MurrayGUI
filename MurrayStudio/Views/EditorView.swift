@@ -13,7 +13,7 @@ import MurrayKit
 
 struct EditorView: View {
     @EnvironmentObject var specController: BoneSpecsController
-    @ObservedObject var controller: BoneItemController
+    @Binding var controller: BoneItemController
 
     var body: some View {
 

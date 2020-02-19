@@ -12,16 +12,25 @@ import MurrayKit
 import SwiftUI
 import Files
 
-class BoneItemController: ObservableObject {
+class BoneItemController: ObservableObject, Identifiable {
+//    static func == (lhs: BoneItemController, rhs: BoneItemController) -> Bool {
+//        lhs.id == rhs.id && lhs.text == rhs.text && lhs.resolved == rhs.resolved
+//    }
+//    func hash(into hasher: inout Hasher) {
+//        hasher.combine(id)
+//        hasher.combine(text)
+//        hasher.combine(resolved)
+//    }
 
-    let file: File
-//    let item: ObjectReference<BoneItem>
-    let spec: ObjectReference<BoneSpec>
+    let file: File?
+    //    let item: ObjectReference<BoneItem>
+    //let spec: ObjectReference<BoneSpec>
+    
+    var id: String { file?.path ?? "" }
 
     @Published var text: String = "" {
         didSet {
             self.resolved = resolve()
-
         }
     }
     @Published var resolved: String = "" {
@@ -37,11 +46,15 @@ class BoneItemController: ObservableObject {
     private func resolve() -> String {
         (try? FileTemplate(fileContents: text, context: context).render()) ?? "error"
     }
-    init?(file: File?, spec: ObjectReference<BoneSpec>?, context: ContextManager) {
-        guard let file = file, let spec = spec else { return nil }
+    init() {
+        self.file = nil
+        context = BoneContext([:])
+    }
+    init(file: File, spec: ObjectReference<BoneSpec>?, context: ContextManager) {
+
         self.file = file
-//        self.item = item
-        self.spec = spec
+        //        self.item = item
+//        self.spec = spec
 
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
 
@@ -50,6 +63,6 @@ class BoneItemController: ObservableObject {
             .prepend(())
             .map { context.context }
             .sink { [weak self] in self?.context = $0}
-    .store(in: &cancellables)
+            .store(in: &cancellables)
     }
 }

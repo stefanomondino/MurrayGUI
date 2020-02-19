@@ -30,13 +30,9 @@ struct BoneFilesView: View {
             }
             .frame(width: 300)
 
-            if self.controller.currentItemController != nil {
-                EditorView(controller: self.controller.currentItemController!)
-            } else {
-                Spacer()
-                Text("Select a file")
-                Spacer()
-            }
+
+                EditorView(controller: self.$controller.currentItemController)
+          
         }
     }
 }
