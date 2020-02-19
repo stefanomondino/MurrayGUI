@@ -68,8 +68,8 @@ class BoneSpecsController: ObservableObject {
 
     let folder: Folder
     var pipeline: BonePipeline?
-    let groups: [String: [GroupWithSpec]]
-    let specs: [ObjectReference<BoneSpec>]
+    @Published var groups: [String: [GroupWithSpec]] = [:]
+    @Published var specs: [ObjectReference<BoneSpec>] = []
 
     var selectedGroup: GroupWithSpec? {
         //        willSet { objectWillChange.send() }
@@ -109,19 +109,21 @@ class BoneSpecsController: ObservableObject {
         specs = []
         contextManager = ContextManager()
     }
-
+    func reset() {
+        self.pipeline = try? BonePipeline(folder: folder) 
+        self.specs = pipeline?.specs.values.map { $0 } ?? []
+        self.groups = specs.reduce([:]) {acc, spec in
+            let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
+            return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
+        }
+        self.objectWillChange.send()
+    }
     init?(url: URL) {
         guard
             let folder = try? Folder(path: url.path),
             let pipeline = try? BonePipeline(folder: folder) else { return nil }
         self.pipeline = pipeline
         self.folder = folder
-
-        self.specs = pipeline.specs.values.map { $0 }
-        self.groups = specs.reduce([:]) {acc, spec in
-            let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
-            return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
-        }
         contextManager = ContextManager(murrayFile: pipeline.murrayFile)
 
         contextManager.objectWillChange
@@ -130,6 +132,7 @@ class BoneSpecsController: ObservableObject {
                 self?.currentItemController.objectWillChange.send()
                 self?.objectWillChange.send() }
             .store(in: &cancellables)
+        reset()
     }
 
     func groups(for spec: ObjectReference<BoneSpec>) -> [GroupWithSpec] {
@@ -171,7 +174,7 @@ class BoneSpecsController: ObservableObject {
         if let json = obj.toJSON(),
             let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]){
             try? spec.file.write(data)
-            self.objectWillChange.send()
+            self.reset()
         }
 
     }

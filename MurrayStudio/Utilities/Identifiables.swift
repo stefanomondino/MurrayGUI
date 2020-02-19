@@ -20,7 +20,20 @@ extension ObjectReference: Equatable {
 
 extension ObjectReference: Hashable {
     public func hash(into hasher: inout Hasher) {
-        return hasher.combine(self.file.path)
+        hasher.combine(self.file.path)
+        if let spec = self.object as? BoneSpec {
+            hasher.combine(spec.groups)
+        }
+    }
+}
+
+extension BoneGroup: Hashable {
+    public static func == (lhs: BoneGroup, rhs: BoneGroup) -> Bool {
+        lhs.name == rhs.name && lhs.itemPaths == rhs.itemPaths
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(name)
+        hasher.combine(itemPaths)
     }
 }
 
