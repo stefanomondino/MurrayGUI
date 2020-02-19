@@ -29,9 +29,20 @@ struct BoneFilesView: View {
                 }
             }
             .frame(width: 300)
+                VStack(alignment: .leading) {
+                    VStack(alignment: .leading) {
+                        HStack {
+                            Text("From: ")
+                            Text(self.controller.currentItemController.file?.path ?? "")
+                        }
+                        HStack {
+                            Text("To: ")
+                            Text(self.controller.currentItemController.destination)
+                        }
+                    }
 
-
-                EditorView(controller: self.$controller.currentItemController)
+                    EditorView(controller: self.$controller.currentItemController)
+                }
           
         }
     }

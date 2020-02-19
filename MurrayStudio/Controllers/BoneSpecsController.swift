@@ -102,10 +102,16 @@ class BoneSpecsController: ObservableObject {
 
     @Published var currentItems: [ObjectReference<BoneItem>] = [] {
         didSet {
-            self.itemManager = ItemsController(controllers: currentItems
-                .compactMap { self.files(for: $0) }
-                .flatMap { $0 }
-                .compactMap { file in BoneItemController(file: file, spec: self.selectedGroup?.spec, context: contextManager) })
+            self.itemManager = (try? ItemsController(controllers: currentItems
+                .flatMap { item in try item.object.paths.compactMap { path in
+
+                    BoneItemController(file: try? item.file.parent?.file(at: path.from),
+                                       path: path,
+                                       context: contextManager)
+                    }
+
+                })) ?? ItemsController(controllers: [])
+//                .compactMap { file in BoneItemController(file: file, destination: "", context: contextManager) })
             objectWillChange.send()
         }
     }
@@ -186,29 +192,45 @@ class BoneSpecsController: ObservableObject {
     func resetContext() {
         self.contextManager.reset()
     }
+
+    @Published var showErrorAlert: Bool = false
+
+    var error: CustomError? {
+        didSet {
+            showErrorAlert = true
+        }
+    }
+
     func run() {
         guard
             let pipeline = self.pipeline,
-            let spec = self.selectedGroup?.spec,
-            let group = self.selectedGroup,
-            let name = self.selectedGroup?.group.name else { return  }
+            let group = self.selectedGroup else { return  }
 
-        let items = try self.items(for: group)
+        let items = self.items(for: group)
         let context = self.contextManager.context
-        try? items.forEach { item in
+        do {
+        try items.forEach { item in
 
             try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
 
             try item.object.paths.forEach({ (path) in
-                try pipeline.transform(path: path, sourceFolder: folder, with: context)
+
+                if let file = try? item.file.parent?.file(at: path.from),
+                    let controller = self.itemManager.controller(for: file) {
+                    try pipeline.transform(path: path, customFileContents: controller.resolved, sourceFolder: folder, with: context)
+                }
             })
             try item.object.replacements.forEach({ replacement in
                 try pipeline.replace(from: replacement, sourceFolder: folder, with: context)
             })
 
             try pipeline.pluginManager.execute(phase: .afterItemReplace(item: item, context: context), from: self.folder)
-        }
 
+            }
+            return
+        } catch let e {
+            self.error = e as? CustomError ?? CustomError.generic
+        }
 
 
         //        try? self.pipeline?.execute(boneName: name, with: contextManager.context.context)

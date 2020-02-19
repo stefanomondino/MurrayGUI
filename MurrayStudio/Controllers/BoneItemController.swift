@@ -25,6 +25,10 @@ class BoneItemController: ObservableObject, Identifiable {
     let file: File?
     //    let item: ObjectReference<BoneItem>
     //let spec: ObjectReference<BoneSpec>
+
+    private let path: BonePath
+
+    @Published var destination: String = ""
     
     var id: String { file?.path ?? "" }
 
@@ -39,6 +43,7 @@ class BoneItemController: ObservableObject, Identifiable {
 
     private var context: BoneContext = BoneContext([:]) {
         didSet {
+            self.destination = (try? path.to.resolved(with: context)) ?? ""
             self.resolved = resolve()
         }
     }
@@ -48,14 +53,17 @@ class BoneItemController: ObservableObject, Identifiable {
     }
     init() {
         self.file = nil
+        self.destination = ""
+        self.path = BonePath(from: "", to: "")
         context = BoneContext([:])
     }
-    init(file: File, spec: ObjectReference<BoneSpec>?, context: ContextManager) {
+    init(file: File?, path: BonePath, context: ContextManager) {
 
         self.file = file
+        self.path = path
         //        self.item = item
 //        self.spec = spec
-
+        guard let file = file else { return }
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
 
         context.objectWillChange

@@ -44,7 +44,9 @@ struct ContextView: View {
                 Spacer()
                 HStack {
                     Button(action: { self.controller.resetContext() }, label:  { Text("RESET") })
-                    Button(action: { self.controller.run() }, label:  { Text("RUN") })
+                    Button(action: { self.controller.run() }, label:  { Text("RUN") }).alert(isPresented: self.$controller.showErrorAlert, content: {
+                        Alert(title: Text("Error"), message: Text(self.controller.error?.localizedDescription ?? ""))
+                    })
                 }
             }.padding()
         }
