@@ -12,6 +12,19 @@ import MurrayKit
 import SwiftUI
 import Files
 
+class ItemsController: ObservableObject {
+    @Published var controllers: [BoneItemController]
+
+    init(controllers: [BoneItemController]) {
+        self.controllers = controllers
+    }
+
+    func controller(for file: File) -> BoneItemController? {
+        controllers.first(where: { $0.file == file })
+    }
+}
+
+
 class BoneItemController: ObservableObject, Identifiable {
 //    static func == (lhs: BoneItemController, rhs: BoneItemController) -> Bool {
 //        lhs.id == rhs.id && lhs.text == rhs.text && lhs.resolved == rhs.resolved
@@ -28,9 +41,8 @@ class BoneItemController: ObservableObject, Identifiable {
 
     private let path: BonePath
 
+    @Published var source: String = ""
     @Published var destination: String = ""
-    
-    var id: String { file?.path ?? "" }
 
     @Published var text: String = "" {
         didSet {
@@ -43,8 +55,10 @@ class BoneItemController: ObservableObject, Identifiable {
 
     private var context: BoneContext = BoneContext([:]) {
         didSet {
-            self.destination = (try? path.to.resolved(with: context)) ?? ""
             self.resolved = resolve()
+            self.source =  (try? path.from.resolved(with: context)) ?? ""
+            self.destination = (try? path.to.resolved(with: context)) ?? ""
+
         }
     }
     private var cancellables: [AnyCancellable] = []
@@ -67,7 +81,7 @@ class BoneItemController: ObservableObject, Identifiable {
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
 
         context.objectWillChange
-            .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
+            .delay(for: .milliseconds(1), scheduler: RunLoop.main)
             .prepend(())
             .map { context.context }
             .sink { [weak self] in self?.context = $0}

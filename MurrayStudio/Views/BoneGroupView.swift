@@ -17,8 +17,9 @@ struct BoneGroupView: View {
         GeometryReader { _ in
             if self.controller.selectedGroup != nil {
                 VStack {
-                    HStack {
-                        Text(self.controller.selectedGroup?.group.name ?? "")
+                    HStack(spacing: 4) {
+                        Text("Selected group: ")
+                        Text(self.controller.selectedGroup?.group.name ?? "").bold()
                         Spacer()
                         Button(action: { self.controller.showPreview.toggle() }) {
                             Text("Show/Hide preview")

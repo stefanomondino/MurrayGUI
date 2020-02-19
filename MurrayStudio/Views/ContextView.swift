@@ -16,8 +16,8 @@ struct ContextView: View {
     var body: some View {
 
         GeometryReader { _ in
-            VStack {
-                Text("Context".uppercased())
+            VStack(alignment: .leading, spacing: 20) {
+                Text("Context").bold()
                 Form {
 
                     Section(header: Text("Local")) {

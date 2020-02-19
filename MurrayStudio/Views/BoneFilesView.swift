@@ -17,36 +17,34 @@ struct BoneFilesView: View {
     var body: some View {
 
         GeometryReader { _ in
-            HStack {
+            HSplitView {
                 List(selection: self.$controller.selectedFile) {
                     ForEach(self.controller.items(for: self.controller.selectedGroup), id: \.self) { item in
-
                         Section(header: Text(item.object.name)) {
                             ForEach(self.controller.files(for: item), id:\.self) { file in
-                            Text(file.name)
+                                Text(file.name)
+                            }
                         }
                     }
-                }
-            }
-            .frame(width: 300)
+                }.frame(minWidth: 200)
                 VStack(alignment: .leading) {
-                    VStack(alignment: .leading) {
+                    VStack(alignment: .leading, spacing: 4) {
                         HStack {
                             Text("From: ")
-                            Text(self.controller.currentItemController.file?.path ?? "")
+                            Text(self.controller.currentItemController.source)
                         }
                         HStack {
                             Text("To: ")
                             Text(self.controller.currentItemController.destination)
                         }
-                    }
+                    }.frame(idealWidth: 1000)
 
                     EditorView(controller: self.$controller.currentItemController)
                 }
-          
+
+            }
         }
     }
-}
 }
 
 struct BoneFilesView_Previews: PreviewProvider {

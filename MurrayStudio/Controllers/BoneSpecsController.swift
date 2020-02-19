@@ -12,18 +12,6 @@ import Combine
 import Files
 import SwiftUI
 
-class ItemsController: ObservableObject {
-    @Published var controllers: [BoneItemController]
-
-    init(controllers: [BoneItemController]) {
-        self.controllers = controllers
-    }
-
-    func controller(for file: File) -> BoneItemController? {
-        controllers.first(where: { $0.file == file })
-    }
-}
-
 extension ObjectReference: Equatable {
     public static func == (lhs: ObjectReference<T>, rhs: ObjectReference<T>) -> Bool {
         return lhs.file == rhs.file
@@ -231,8 +219,5 @@ class BoneSpecsController: ObservableObject {
         } catch let e {
             self.error = e as? CustomError ?? CustomError.generic
         }
-
-
-        //        try? self.pipeline?.execute(boneName: name, with: contextManager.context.context)
     }
 }
