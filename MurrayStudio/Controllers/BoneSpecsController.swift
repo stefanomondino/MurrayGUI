@@ -12,66 +12,50 @@ import Combine
 import Files
 import SwiftUI
 
-class ObservableArray<T>: ObservableObject {
+class ContextManager: ObservableObject {
 
-    @Published var array:[T] = [] {
+    @Published var environment:[ContextPair] = [] {
         willSet { objectWillChange.send() }
     }
-//    var cancellables = [AnyCancellable]()
-
-    init(array: [T]) {
-        self.array = array
-
+    @Published var local:[ContextPair] = [] {
+        willSet { objectWillChange.send() }
+    }
+    func reset() {
+        if let murrayFile = murrayFile {
+            self.local = [ContextPair(key: murrayFile.mainPlaceholder ?? MurrayFile.defaultPlaceholder, value: "")]
+            self.environment = murrayFile.environment.compactMap { ContextPair(key: $0.key, value: $0.value as! String) }
+        }
+    }
+    var context: BoneContext {
+        BoneContext(local.dictionary, environment: environment.dictionary)
+    }
+    init(environment: [ContextPair] = [], local: [ContextPair] = []) {
+        self.murrayFile = nil
+        self.environment = environment
+        self.local = local
     }
 
-//    func observeChildrenChanges<T: ObservableObject>() -> ObservableArray<T> {
-//        let array2 = array as! [T]
-//        array2.forEach({
-//            let c = $0.objectWillChange.sink(receiveValue: { _ in self.objectWillChange.send() })
-//
-//            // Important: You have to keep the returned value allocated,
-//            // otherwise the sink subscription gets cancelled
-//            self.cancellables.append(c)
-//        })
-//        return self as! ObservableArray<T>
-//    }
+    let murrayFile: MurrayFile?
 
-
+    init(murrayFile: MurrayFile) {
+        self.murrayFile = murrayFile
+        reset()
+    }
 }
-struct ContextPair: Identifiable {
+
+extension Array where Element == ContextPair {
+    var dictionary: [String: String] {
+        return reduce([:]) {
+            $0.merging([$1.key: $1.value]) { $1 }
+        }
+    }
+}
+
+struct ContextPair: Identifiable, Hashable {
     var id: String { key }
     var key: String
     var value: String
 }
-
-//class ContextPair: ObservableObject, Hashable, Identifiable {
-//    static func == (lhs: ContextPair, rhs: ContextPair) -> Bool {
-//        lhs.key == rhs.key && lhs.value.wrappedValue == rhs.value.wrappedValue
-//    }
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(key)
-//        hasher.combine(value.wrappedValue)
-//    }
-//    var key: String = ""
-//    private var innerValue: String = ""
-//    var id: String { key }
-//
-//    var value = Binding<String>(get: {return ""}, set: {_ in })
-//
-//    init?(key: String, value: Any) {
-//        guard let string = value as? CustomStringConvertible else { return nil }
-//        self.key = key
-//        self.innerValue = string.description
-//        self.value = Binding(get: { () -> String in
-//            print (self.innerValue)
-//            return self.innerValue
-//        }, set: {
-//            self.innerValue = $0
-//            self.objectWillChange.send()
-//        })
-//
-//    }
-//}
 
 extension ObjectReference: Equatable {
     public static func == (lhs: ObjectReference<T>, rhs: ObjectReference<T>) -> Bool {
@@ -145,7 +129,7 @@ class BoneSpecsController: ObservableObject {
 
     @Published var currentItems: [ObjectReference<BoneItem>] = []
     @Published var currentItemController: BoneItemController?
-    @ObservedObject var contextManager: ObservableArray<ContextPair>
+    @ObservedObject var contextManager: ContextManager
 
     var isEmpty: Bool {
         specs.isEmpty
@@ -157,7 +141,7 @@ class BoneSpecsController: ObservableObject {
         folder = Folder.temporary
         groups = [:]
         specs = []
-        contextManager = ObservableArray(array: [])
+        contextManager = ContextManager()
     }
 
     init?(url: URL) {
@@ -172,9 +156,8 @@ class BoneSpecsController: ObservableObject {
             let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
             return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
         }
-        contextManager = ObservableArray(array: [ContextPair(key: "name", value: "Test")].compactMap { $0 } +
-            pipeline.murrayFile.environment.compactMap { ContextPair(key: $0.key, value: $0.value as! String) })
-        
+        contextManager = ContextManager(murrayFile: pipeline.murrayFile)
+
         contextManager.objectWillChange
             .sink {[weak self] in self?.objectWillChange.send() }
             .store(in: &cancellables)
@@ -201,13 +184,12 @@ class BoneSpecsController: ObservableObject {
             .compactMap { try? item?.file.parent?.file(at: $0) }
         ?? []
     }
-
+    func resetContext() {
+        self.contextManager.reset()
+    }
     func run() {
         guard let name = self.selectedGroup?.group.name else { return  }
-        let context = contextManager.array
-            .reduce([String: String]()){ a, t in
-                a.merging([t.key: t.value], uniquingKeysWith: {$1})
-        }
-        try? self.pipeline?.execute(boneName: name, with: context)
+
+        try? self.pipeline?.execute(boneName: name, with: contextManager.context.context)
     }
 }

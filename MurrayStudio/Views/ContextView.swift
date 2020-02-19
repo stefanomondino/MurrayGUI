@@ -17,16 +17,35 @@ struct ContextView: View {
 
         GeometryReader { _ in
             VStack {
-            Form {
-                ForEach(self.controller.contextManager.array.indices, id:\.self) { index in
-                    HStack(spacing: 2) {
-                        Text(self.controller.contextManager.array[index].key)
-                        TextField(self.controller.contextManager.array[index].key, text: self.$controller.contextManager.array[index].value)
+                Text("Context".uppercased())
+                Form {
+
+                    Section(header: Text("Local")) {
+
+                        ForEach(self.controller.contextManager.local.indices, id:\.self) { index in
+                            HStack {
+                                Text(self.controller.contextManager.local[index].key)
+                                TextField(self.controller.contextManager.local[index].key, text: self.$controller.contextManager.local[index].value)
+                                    .tag(self.controller.contextManager.local[index].key)
+                            }
+
+                        }
+                    }
+                    Section(header: Text("Environment")) {
+
+                        ForEach(self.controller.contextManager.environment.indices, id:\.self) { index in
+                            HStack {
+                                Text(self.controller.contextManager.environment[index].key)
+                                TextField(self.controller.contextManager.environment[index].key, text: self.$controller.contextManager.environment[index].value)
+                            }.tag(self.controller.contextManager.environment[index].key)
+                        }
                     }
                 }
-            }
-            Spacer()
-            Button(action: { self.controller.run() }, label:  { Text("RUN") })
+                Spacer()
+                HStack {
+                    Button(action: { self.controller.resetContext() }, label:  { Text("RESET") })
+                    Button(action: { self.controller.run() }, label:  { Text("RUN") })
+                }
             }.padding()
         }
     }

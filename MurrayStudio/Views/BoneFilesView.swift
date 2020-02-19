@@ -28,7 +28,7 @@ struct BoneFilesView: View {
                     }
                 }
             }
-            .frame(width: 200)
+            .frame(width: 300)
 
             if self.controller.currentItemController != nil {
                 EditorView(controller: self.controller.currentItemController!)

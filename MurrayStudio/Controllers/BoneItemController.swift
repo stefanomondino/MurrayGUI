@@ -37,7 +37,7 @@ class BoneItemController: ObservableObject {
     private func resolve() -> String {
         (try? FileTemplate(fileContents: text, context: context).render()) ?? "error"
     }
-    init?(file: File?, spec: ObjectReference<BoneSpec>?, context: ObservableArray<ContextPair>) {
+    init?(file: File?, spec: ObjectReference<BoneSpec>?, context: ContextManager) {
         guard let file = file, let spec = spec else { return nil }
         self.file = file
 //        self.item = item
@@ -48,12 +48,7 @@ class BoneItemController: ObservableObject {
         context.objectWillChange
             .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
             .prepend(())
-            .map { context.array
-            .reduce([String: String]()){ a, t in
-                a.merging([t.key: t.value], uniquingKeysWith: {$1})
-            }
-            }
-            .map { BoneContext($0, environment: [:])}
+            .map { context.context }
             .sink { [weak self] in self?.context = $0}
     .store(in: &cancellables)
     }
