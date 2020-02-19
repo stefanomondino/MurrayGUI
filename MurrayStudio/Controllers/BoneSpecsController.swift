@@ -12,37 +12,6 @@ import Combine
 import Files
 import SwiftUI
 
-extension ObjectReference: Equatable {
-    public static func == (lhs: ObjectReference<T>, rhs: ObjectReference<T>) -> Bool {
-        return lhs.file == rhs.file
-    }
-
-}
-
-extension ObjectReference: Hashable {
-    public func hash(into hasher: inout Hasher) {
-        return hasher.combine(self.file.path)
-    }
-}
-
-extension File: Hashable {
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(path)
-    }
-}
-
-extension BonePath: Hashable, Equatable {
-    public static func == (lhs: BonePath, rhs: BonePath) -> Bool {
-        lhs.from == rhs.from && lhs.to == rhs.to
-    }
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(from)
-        hasher.combine(to)
-    }
-}
-
 class BoneSpecsController: ObservableObject {
 
     struct GroupWithSpec: Hashable {
@@ -59,14 +28,48 @@ class BoneSpecsController: ObservableObject {
 
     }
 
+    @Published var showPreview: Bool = true
+    @Published var showErrorAlert: Bool = false
+
+    @ObservedObject var currentItemController: BoneItemController = BoneItemController() {
+//        willSet { objectWillChange.send() }
+        didSet {
+            //            currentItemCancellables = []
+            currentItemController
+                .objectWillChange
+                .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
+                .sink {[weak self] in self?.objectWillChange.send() }
+                .store(in: &currentItemCancellables)
+
+        }
+    }
+
+    @ObservedObject var contextManager: ContextManager
+
+    @Published var itemManager: ItemsController = ItemsController(controllers: [])
+//        {
+//        willSet { objectWillChange.send() }
+//    }
+
+    @Published var currentItems: [ObjectReference<BoneItem>] = [] {
+        didSet {
+            self.itemManager = (ItemsController(controllers: currentItems
+                .flatMap { item in item.object.paths.compactMap { path in
+
+                    BoneItemController(file: try? item.file.parent?.file(at: path.from),
+                                       path: path,
+                                       context: contextManager)
+                    }
+
+            }))
+//            objectWillChange.send()
+        }
+    }
+
     let folder: Folder
     var pipeline: BonePipeline?
     let groups: [String: [GroupWithSpec]]
     let specs: [ObjectReference<BoneSpec>]
-    
-    private var cancellables: [AnyCancellable] = []
-
-    @Published var showPreview: Bool = true
 
     var selectedGroup: GroupWithSpec? {
         //        willSet { objectWillChange.send() }
@@ -82,46 +85,13 @@ class BoneSpecsController: ObservableObject {
             if let file = selectedFile {
                 self.currentItemController = itemManager.controller(for: file)!
             }
-            self.objectWillChange.send()
+//            self.objectWillChange.send()
             self.currentItemController.objectWillChange.send()
 
         }
     }
 
-    @Published var currentItems: [ObjectReference<BoneItem>] = [] {
-        didSet {
-            self.itemManager = (try? ItemsController(controllers: currentItems
-                .flatMap { item in try item.object.paths.compactMap { path in
-
-                    BoneItemController(file: try? item.file.parent?.file(at: path.from),
-                                       path: path,
-                                       context: contextManager)
-                    }
-
-                })) ?? ItemsController(controllers: [])
-//                .compactMap { file in BoneItemController(file: file, destination: "", context: contextManager) })
-            objectWillChange.send()
-        }
-    }
-
     var currentItemCancellables: [AnyCancellable] = []
-    @ObservedObject var currentItemController: BoneItemController = BoneItemController() {
-        willSet { objectWillChange.send() }
-        didSet {
-//            currentItemCancellables = []
-            currentItemController
-                .objectWillChange
-                .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
-                .sink {[weak self] in self?.objectWillChange.send() }
-                .store(in: &currentItemCancellables)
-
-        }
-    }
-    @ObservedObject var contextManager: ContextManager
-
-    @Published var itemManager: ItemsController = ItemsController(controllers: []) {
-        willSet { objectWillChange.send() }
-    }
 
     var isEmpty: Bool {
         specs.isEmpty
@@ -130,6 +100,9 @@ class BoneSpecsController: ObservableObject {
     static var empty: BoneSpecsController {
         BoneSpecsController()
     }
+
+    private var cancellables: [AnyCancellable] = []
+
     private init() {
         folder = Folder.temporary
         groups = [:]
@@ -152,7 +125,10 @@ class BoneSpecsController: ObservableObject {
         contextManager = ContextManager(murrayFile: pipeline.murrayFile)
 
         contextManager.objectWillChange
-            .sink {[weak self] in self?.objectWillChange.send() }
+            .delay(for: .microseconds(1), scheduler: RunLoop.main)
+            .sink {[weak self] in
+                self?.currentItemController.objectWillChange.send()
+                self?.objectWillChange.send() }
             .store(in: &cancellables)
     }
 
@@ -181,12 +157,23 @@ class BoneSpecsController: ObservableObject {
         self.contextManager.reset()
     }
 
-    @Published var showErrorAlert: Bool = false
+
 
     var error: CustomError? {
         didSet {
             showErrorAlert = true
         }
+    }
+    func addGroup(named name: String, to spec: ObjectReference<BoneSpec>) {
+        let group = BoneGroup(name: name)
+        var obj = spec.object
+        obj.add(group: group)
+        if let json = obj.toJSON(),
+            let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]){
+            try? spec.file.write(data)
+            self.objectWillChange.send()
+        }
+
     }
 
     func run() {
@@ -197,22 +184,22 @@ class BoneSpecsController: ObservableObject {
         let items = self.items(for: group)
         let context = self.contextManager.context
         do {
-        try items.forEach { item in
+            try items.forEach { item in
 
-            try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
+                try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
 
-            try item.object.paths.forEach({ (path) in
+                try item.object.paths.forEach({ (path) in
 
-                if let file = try? item.file.parent?.file(at: path.from),
-                    let controller = self.itemManager.controller(for: file) {
-                    try pipeline.transform(path: path, customFileContents: controller.resolved, sourceFolder: folder, with: context)
-                }
-            })
-            try item.object.replacements.forEach({ replacement in
-                try pipeline.replace(from: replacement, sourceFolder: folder, with: context)
-            })
+                    if let file = try? item.file.parent?.file(at: path.from),
+                        let controller = self.itemManager.controller(for: file) {
+                        try pipeline.transform(path: path, customFileContents: controller.resolved, sourceFolder: folder, with: context)
+                    }
+                })
+                try item.object.replacements.forEach({ replacement in
+                    try pipeline.replace(from: replacement, sourceFolder: folder, with: context)
+                })
 
-            try pipeline.pluginManager.execute(phase: .afterItemReplace(item: item, context: context), from: self.folder)
+                try pipeline.pluginManager.execute(phase: .afterItemReplace(item: item, context: context), from: self.folder)
 
             }
             return

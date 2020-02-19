@@ -16,6 +16,8 @@
 		70A817B223FD2E330068A00F /* MurrayKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B123FD2E330068A00F /* MurrayKit */; };
 		70A817B523FD2E5C0068A00F /* Sourceful in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B423FD2E5C0068A00F /* Sourceful */; };
 		70A817B723FD66950068A00F /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817B623FD66950068A00F /* ContextManager.swift */; };
+		70A817B923FD96C10068A00F /* GroupActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817B823FD96C10068A00F /* GroupActionSheet.swift */; };
+		70A817BB23FD9B550068A00F /* Identifiables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817BA23FD9B550068A00F /* Identifiables.swift */; };
 		70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */; };
 		70D8E7D623FA9DEE00A89C70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */; };
 		70D8E7D923FA9DEE00A89C70 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */; };
@@ -35,6 +37,8 @@
 		70A817A923FAD9B10068A00F /* EditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		70A817AB23FAD9FF0068A00F /* BoneItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneItemController.swift; sourceTree = "<group>"; };
 		70A817B623FD66950068A00F /* ContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextManager.swift; sourceTree = "<group>"; };
+		70A817B823FD96C10068A00F /* GroupActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupActionSheet.swift; sourceTree = "<group>"; };
+		70A817BA23FD9B550068A00F /* Identifiables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiables.swift; sourceTree = "<group>"; };
 		70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MurrayStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -107,6 +111,7 @@
 			children = (
 				70D8E7F423FAA79E00A89C70 /* MainWindow.swift */,
 				70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */,
+				70A817BA23FD9B550068A00F /* Identifiables.swift */,
 				70A817B623FD66950068A00F /* ContextManager.swift */,
 				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
 			);
@@ -116,6 +121,7 @@
 		70D8E7EF23FAA35800A89C70 /* Views */ = {
 			isa = PBXGroup;
 			children = (
+				70A817B823FD96C10068A00F /* GroupActionSheet.swift */,
 				70D8E7F923FAA83C00A89C70 /* MainView.swift */,
 				70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */,
 				70A817A123FAADF00068A00F /* ContextView.swift */,
@@ -216,6 +222,8 @@
 			files = (
 				70A817A223FAADF00068A00F /* ContextView.swift in Sources */,
 				70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */,
+				70A817B923FD96C10068A00F /* GroupActionSheet.swift in Sources */,
+				70A817BB23FD9B550068A00F /* Identifiables.swift in Sources */,
 				70A817B723FD66950068A00F /* ContextManager.swift in Sources */,
 				70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */,
 				70A817A423FAB59D0068A00F /* BoneGroupView.swift in Sources */,

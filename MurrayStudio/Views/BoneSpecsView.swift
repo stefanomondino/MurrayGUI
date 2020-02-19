@@ -11,12 +11,40 @@ import SwiftUI
 import MurrayKit
 
 struct BoneSpecsView: View {
+
+    enum Action: Int, Identifiable {
+        case rename
+        case new
+        case delete
+
+        var id: Int { rawValue }
+
+        var sheetTitle: String {
+            switch self {
+            case .rename: return "Rename Group"
+            case .new: return "New Group"
+            case .delete: return "Delete Group"
+            }
+        }
+
+        var saveActionTitle: String {
+            switch self {
+            case .rename: return "Rename"
+            case .new: return "New"
+            case .delete: return "Delete"
+            }
+        }
+    }
+
     @EnvironmentObject var controller: BoneSpecsController
+    @State var filterString: String = ""
+    @State var action: Action?
+    @State var newGroupName = ""
 
     var body: some View {
 
         GeometryReader { _ in
-            VStack(spacing: 0) {
+            VStack(alignment: .leading, spacing: 0) {
                 List(selection: self.$controller.selectedGroup) {
                     if self.controller.isEmpty {
                         Text("No specs found in current project")
@@ -27,6 +55,16 @@ struct BoneSpecsView: View {
                     }
                 }
                 .listStyle(SidebarListStyle())
+                Spacer()
+                HStack {
+
+                    Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
+                        .controlSize(.regular)
+                        .onTapGesture { print("!") }
+                    TextField("Filter", text: self.$filterString)
+
+                }.padding(4)
+                Spacer()
             }
         }
     }
@@ -41,9 +79,27 @@ struct BoneSpecsView: View {
                     HStack(spacing: 2)  {
                         Text(spec.object.name.uppercased())
                         Text("(\(spec.object.groups.count))")
-                }
-                    ) {
-                    ForEach(groups, id: \.self) { group in
+                        Spacer()
+                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
+                            .controlSize(.regular)
+                            .onTapGesture { self.action = .new }
+                    }
+//                    .contextMenu(ContextMenu {
+//                        Button("Add group...") { self.action = .new }
+//                    })
+                        .sheet(item: self.$action) { action in
+                            if action == .new {
+                                GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
+                                    self.controller.addGroup(named: self.newGroupName, to: spec)
+                                }, content: { TextField("Group name", text: self.$newGroupName) })
+                            } else {
+                                EmptyView()
+                            }
+
+
+                    }
+                ) {
+                    ForEach(groups.filter { $0.group.contains(self.filterString) }, id: \.self) { group in
                         HStack {
                             Text(group.group.name)
                             Text("(\(self.controller.items(for: group).count))")
@@ -54,6 +110,14 @@ struct BoneSpecsView: View {
                 }
             }
         }
+    }
+}
+
+extension BoneGroup {
+    func contains(_ string: String) -> Bool {
+        let string = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        if string.isEmpty { return true }
+        return name.lowercased().contains(string.lowercased())
     }
 }
 
