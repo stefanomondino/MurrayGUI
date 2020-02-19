@@ -13,12 +13,12 @@
 		70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A723FACFE10068A00F /* SourceCodeView.swift */; };
 		70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817A923FAD9B10068A00F /* EditorView.swift */; };
 		70A817AC23FAD9FF0068A00F /* BoneItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817AB23FAD9FF0068A00F /* BoneItemController.swift */; };
+		70A817B223FD2E330068A00F /* MurrayKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B123FD2E330068A00F /* MurrayKit */; };
+		70A817B523FD2E5C0068A00F /* Sourceful in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B423FD2E5C0068A00F /* Sourceful */; };
 		70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */; };
 		70D8E7D623FA9DEE00A89C70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */; };
 		70D8E7D923FA9DEE00A89C70 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */; };
 		70D8E7DC23FA9DEE00A89C70 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7DA23FA9DEE00A89C70 /* Main.storyboard */; };
-		70D8E7E623FA9E3D00A89C70 /* MurrayKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70D8E7E523FA9E3D00A89C70 /* MurrayKit */; };
-		70D8E7E923FAA20D00A89C70 /* Sourceful in Frameworks */ = {isa = PBXBuildFile; productRef = 70D8E7E823FAA20D00A89C70 /* Sourceful */; };
 		70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */; };
 		70D8E7EE23FAA35400A89C70 /* BoneSpecsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */; };
 		70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */; };
@@ -52,8 +52,8 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				70D8E7E623FA9E3D00A89C70 /* MurrayKit in Frameworks */,
-				70D8E7E923FAA20D00A89C70 /* Sourceful in Frameworks */,
+				70A817B223FD2E330068A00F /* MurrayKit in Frameworks */,
+				70A817B523FD2E5C0068A00F /* Sourceful in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -149,8 +149,8 @@
 			);
 			name = MurrayStudio;
 			packageProductDependencies = (
-				70D8E7E523FA9E3D00A89C70 /* MurrayKit */,
-				70D8E7E823FAA20D00A89C70 /* Sourceful */,
+				70A817B123FD2E330068A00F /* MurrayKit */,
+				70A817B423FD2E5C0068A00F /* Sourceful */,
 			);
 			productName = MurrayStudio;
 			productReference = 70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */;
@@ -181,8 +181,8 @@
 			);
 			mainGroup = 70D8E7C523FA9DEC00A89C70;
 			packageReferences = (
-				70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */,
-				70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */,
+				70A817B023FD2E330068A00F /* XCRemoteSwiftPackageReference "Murray" */,
+				70A817B323FD2E5C0068A00F /* XCRemoteSwiftPackageReference "Sourceful" */,
 			);
 			productRefGroup = 70D8E7CF23FA9DEC00A89C70 /* Products */;
 			projectDirPath = "";
@@ -421,17 +421,17 @@
 /* End XCConfigurationList section */
 
 /* Begin XCRemoteSwiftPackageReference section */
-		70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */ = {
+		70A817B023FD2E330068A00F /* XCRemoteSwiftPackageReference "Murray" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:synesthesia-it/Murray";
+			repositoryURL = "https://github.com/synesthesia-it/Murray";
 			requirement = {
 				branch = v2;
 				kind = branch;
 			};
 		};
-		70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */ = {
+		70A817B323FD2E5C0068A00F /* XCRemoteSwiftPackageReference "Sourceful" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "git@github.com:twostraws/Sourceful.git";
+			repositoryURL = "https://github.com/twostraws/Sourceful.git";
 			requirement = {
 				branch = master;
 				kind = branch;
@@ -440,14 +440,14 @@
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
-		70D8E7E523FA9E3D00A89C70 /* MurrayKit */ = {
+		70A817B123FD2E330068A00F /* MurrayKit */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 70D8E7E423FA9E3D00A89C70 /* XCRemoteSwiftPackageReference "Murray" */;
+			package = 70A817B023FD2E330068A00F /* XCRemoteSwiftPackageReference "Murray" */;
 			productName = MurrayKit;
 		};
-		70D8E7E823FAA20D00A89C70 /* Sourceful */ = {
+		70A817B423FD2E5C0068A00F /* Sourceful */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 70D8E7E723FAA20D00A89C70 /* XCRemoteSwiftPackageReference "Sourceful" */;
+			package = 70A817B323FD2E5C0068A00F /* XCRemoteSwiftPackageReference "Sourceful" */;
 			productName = Sourceful;
 		};
 /* End XCSwiftPackageProductDependency section */

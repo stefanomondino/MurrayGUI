@@ -48,7 +48,7 @@
       },
       {
         "package": "Murray",
-        "repositoryURL": "git@github.com:synesthesia-it/Murray",
+        "repositoryURL": "https://github.com/synesthesia-it/Murray",
         "state": {
           "branch": "v2",
           "revision": "17e01d63f95c80e9c1f67bbba59855fc43b5c99b",
@@ -102,7 +102,7 @@
       },
       {
         "package": "Sourceful",
-        "repositoryURL": "git@github.com:twostraws/Sourceful.git",
+        "repositoryURL": "https://github.com/twostraws/Sourceful.git",
         "state": {
           "branch": "master",
           "revision": "442989f8e9d290f9c3b893d907a90937b80870c3",
