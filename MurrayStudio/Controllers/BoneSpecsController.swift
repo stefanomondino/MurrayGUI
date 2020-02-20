@@ -110,7 +110,7 @@ class BoneSpecsController: ObservableObject {
         contextManager = ContextManager()
     }
     func reset() {
-        self.pipeline = try? BonePipeline(folder: folder) 
+        self.pipeline = try? BonePipeline(folder: folder)
         self.specs = pipeline?.specs.values.map { $0 } ?? []
         self.groups = specs.reduce([:]) {acc, spec in
             let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
@@ -160,24 +160,12 @@ class BoneSpecsController: ObservableObject {
         self.contextManager.reset()
     }
 
-
-
     var error: CustomError? {
         didSet {
             showErrorAlert = true
         }
     }
-    func addGroup(named name: String, to spec: ObjectReference<BoneSpec>) {
-        let group = BoneGroup(name: name)
-        var obj = spec.object
-        obj.add(group: group)
-        if let json = obj.toJSON(),
-            let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]){
-            try? spec.file.write(data)
-            self.reset()
-        }
 
-    }
 
     func run() {
         guard
@@ -186,7 +174,7 @@ class BoneSpecsController: ObservableObject {
 
         let items = self.items(for: group)
         let context = self.contextManager.context
-        do {
+        withError {
             try items.forEach { item in
 
                 try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
@@ -206,8 +194,43 @@ class BoneSpecsController: ObservableObject {
 
             }
             return
-        } catch let e {
-            self.error = e as? CustomError ?? CustomError.generic
         }
+    }
+}
+
+extension BoneSpecsController {
+
+    func withError(_ closure: () throws -> Void ) {
+        do {
+            try closure()
+        } catch let error {
+            self.error = error as? CustomError ?? .generic
+        }
+    }
+
+    func addGroup(named name: String, to spec: ObjectReference<BoneSpec>) {
+        let group = BoneGroup(name: name)
+        var obj = spec.object
+        obj.add(group: group)
+        if let json = obj.toJSON(),
+            let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]){
+            try? spec.file.write(data)
+            self.reset()
+        }
+    }
+
+    func addFile(named: String, destination: String, to item: ObjectReference<BoneItem>) {
+        guard let folder = item.file.parent else { return }
+        var item = item
+        let path = BonePath(from: named, to: destination)
+        item.object.add(path: path)
+        withError {
+            try folder.createFile(at: named)
+            try item.save()
+            let group = self.selectedGroup
+            self.selectedGroup = group
+        }
+
+
     }
 }
