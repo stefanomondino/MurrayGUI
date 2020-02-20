@@ -53,6 +53,18 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             }
         }
     }
+//    @IBAction func newFile(_ sender: Any) {
+//        let panel = NSOpenPanel()
+//        panel.canChooseDirectories = true
+//        panel.canChooseFiles = false
+//        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+//            let result = panel.runModal()
+//            if let url = panel.url, result == .OK {
+//                self.openMurrayWindow(url: url)
+//                //                           self.viewModel.url = url
+//            }
+//        }
+//    }
 
     func openMurrayWindow(url: URL) {
         guard let controller = BoneSpecsController(url: url) else { return }

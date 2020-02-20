@@ -121,8 +121,15 @@ class BoneSpecsController: ObservableObject {
     }
     init?(url: URL) {
         guard
-            let folder = try? Folder(path: url.path),
-            let pipeline = try? BonePipeline(folder: folder) else { return nil }
+            let folder = try? Folder(path: url.path)
+           else { return nil }
+        var pipelineAttempt = try? BonePipeline(folder: folder)
+        if pipelineAttempt == nil {
+            try? MurrayfileScaffoldCommand().fromFolder(folder).execute()
+            pipelineAttempt = try? BonePipeline(folder: folder)
+
+        }
+        guard let pipeline = pipelineAttempt else { return nil }
         self.pipeline = pipeline
         self.folder = folder
         contextManager = ContextManager(murrayFile: pipeline.murrayFile)

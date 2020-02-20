@@ -71,7 +71,33 @@ struct BoneSpecsView: View {
 
                 }.padding(4)
                 Spacer()
-            }
+            }.sheet(item: self.$action) { action in
+                if action.newItem != nil {
+                    GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
+                        self.action = nil
+                        self.controller.addGroup(named: self.newGroupName, to: action.newItem!)
+                    }, content: { TextField("Group name", text: self.$newGroupName) })
+                }
+                else if action.isNewSpec {
+                    GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
+                        self.action = nil
+                        self.controller.addSpec(named: self.newSpecName, folder: self.newSpecPath)
+                    }, content: { VStack {
+                        TextField("Spec name", text: self.$newSpecName)
+                        TextField("Path", text: self.$newSpecPath)
+                        }
+                    })
+                }
+                else {
+                    EmptyView()
+                }
+
+
+            }.onAppear(perform: {
+                self.newSpecPath = ""
+                self.newSpecName = ""
+                self.newGroupName = ""
+            }).onDisappear(perform: { self.action = nil })
         }
     }
 
@@ -91,33 +117,7 @@ struct BoneSpecsView: View {
 //                    .contextMenu(ContextMenu {
 //                        Button("Add group...") { self.action = .new }
 //                    })
-                        .sheet(item: self.$action) { action in
-                            if action.newItem != nil {
-                                GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
-                                    self.action = nil
-                                    self.controller.addGroup(named: self.newGroupName, to: action.newItem!)
-                                }, content: { TextField("Group name", text: self.$newGroupName) })
-                            }
-                            else if action.isNewSpec {
-                                GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
-                                    self.action = nil
-                                    self.controller.addSpec(named: self.newSpecName, folder: self.newSpecPath)
-                                }, content: { VStack {
-                                    TextField("Spec name", text: self.$newSpecName)
-                                    TextField("Path", text: self.$newSpecPath)
-                                    }
-                                })
-                            }
-                            else {
-                                EmptyView()
-                            }
 
-
-                    }.onAppear(perform: {
-                        self.newSpecPath = ""
-                        self.newSpecName = ""
-                        self.newGroupName = ""
-                    }).onDisappear(perform: { self.action = nil })
                 ) {
                     ForEach(groups.filter { $0.group.contains(self.filterString) }, id: \.self) { group in
                         HStack {
