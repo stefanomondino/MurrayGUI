@@ -95,16 +95,21 @@ struct BoneFilesView: View {
                 
 
                 VStack(alignment: .leading) {
-                    VStack(alignment: .leading, spacing: 4) {
-                        HStack {
-                            Text("From: ")
-                            Text(self.controller.currentItemController.source)
-                        }
-                        HStack {
-                            Text("To: ")
-                            Text(self.controller.currentItemController.destination)
-                        }
-                    }.frame(idealWidth: 1000)
+                    HStack {
+                        VStack(alignment: .leading, spacing: 4) {
+                            HStack {
+                                Text("From: ")
+                                Text(self.controller.currentItemController.source)
+                            }
+                            HStack {
+                                Text("To: ")
+                                Text(self.controller.currentItemController.destination)
+                            }
+                        }.frame(idealWidth: 1000)
+                        Spacer()
+                        Button("Restore", action: { self.controller.currentItemController.restore() })
+                        Button("Save", action: { self.controller.currentItemController.save() })
+                    }.padding()
 
                     EditorView(controller: self.$controller.currentItemController)
                 }

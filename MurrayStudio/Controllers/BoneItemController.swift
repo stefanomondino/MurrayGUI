@@ -87,4 +87,11 @@ class BoneItemController: ObservableObject, Identifiable {
             .sink { [weak self] in self?.context = $0}
             .store(in: &cancellables)
     }
+    func restore() {
+        guard let file = file else { return }
+        text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
+    }
+    func save() {
+        try? file?.write(self.text)
+    }
 }

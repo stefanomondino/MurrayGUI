@@ -18,7 +18,6 @@ struct EditorView: View {
     var body: some View {
 
         VStack {
-            
             HStack {
                 SourceCodeView(text: self.$controller.text)
                 if self.specController.showPreview {
