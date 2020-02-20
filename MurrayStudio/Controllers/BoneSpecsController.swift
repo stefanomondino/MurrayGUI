@@ -23,8 +23,8 @@ class BoneSpecsController: ObservableObject {
             hasher.combine(group.name)
         }
 
-        let spec: ObjectReference<BoneSpec>
-        let group: BoneGroup
+        var spec: ObjectReference<BoneSpec>
+        var group: BoneGroup
 
     }
 
@@ -32,7 +32,7 @@ class BoneSpecsController: ObservableObject {
     @Published var showErrorAlert: Bool = false
 
     @ObservedObject var currentItemController: BoneItemController = BoneItemController() {
-//        willSet { objectWillChange.send() }
+        //        willSet { objectWillChange.send() }
         didSet {
             //            currentItemCancellables = []
             currentItemController
@@ -47,9 +47,9 @@ class BoneSpecsController: ObservableObject {
     @ObservedObject var contextManager: ContextManager
 
     @Published var itemManager: ItemsController = ItemsController(controllers: [])
-//        {
-//        willSet { objectWillChange.send() }
-//    }
+    //        {
+    //        willSet { objectWillChange.send() }
+    //    }
 
     @Published var currentItems: [ObjectReference<BoneItem>] = [] {
         didSet {
@@ -62,7 +62,7 @@ class BoneSpecsController: ObservableObject {
                     }
 
             }))
-//            objectWillChange.send()
+            //            objectWillChange.send()
         }
     }
 
@@ -85,7 +85,7 @@ class BoneSpecsController: ObservableObject {
             if let file = selectedFile {
                 self.currentItemController = itemManager.controller(for: file)!
             }
-//            self.objectWillChange.send()
+            //            self.objectWillChange.send()
             self.currentItemController.objectWillChange.send()
 
         }
@@ -111,6 +111,7 @@ class BoneSpecsController: ObservableObject {
     }
     func reset() {
         self.pipeline = try? BonePipeline(folder: folder)
+        self.specs = []
         self.specs = pipeline?.specs.values.map { $0 } ?? []
         self.groups = specs.reduce([:]) {acc, spec in
             let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
@@ -149,7 +150,23 @@ class BoneSpecsController: ObservableObject {
             .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
             ?? []
     }
+    func allItems() -> [ObjectReference<BoneItem>] {
 
+        guard let spec = self.selectedGroup?.spec else { return [] }
+        return (try? spec.file.parent?.subfolders.compactMap({ (folder) in
+            let item = try folder.decodable(BoneItem.self, at: "BoneItem.json")
+            let file = try folder.file(at: "BoneItem.json")
+            return try ObjectReference(file: file, object: item)
+        })) ?? []
+
+//        guard let spec = self.selectedGroup?.spec else { return [] }
+//
+//        return Set(self.groups(for: spec)
+////            .flatMap { $0 }
+//            .flatMap { self.items(for: $0)})
+//            .map { $0 }
+
+    }
     func files(for item: ObjectReference<BoneItem>?) -> [File] {
         item?.object.paths
             .map { $0.from }
@@ -219,6 +236,40 @@ extension BoneSpecsController {
         }
     }
 
+    func addItem(_ item: ObjectReference<BoneItem>? = nil, named name: String? = nil, to groupRef: GroupWithSpec) {
+        withError {
+            var groupRef = groupRef
+
+            if let name = name {
+                try BoneItemScaffoldCommand(specName: groupRef.spec.object.name, name: name, files: [])
+                    .fromFolder(self.folder)
+                .execute()
+                guard let folder = try groupRef.spec.file.parent?.subfolder(at: name) else { return }
+                let item = try folder.decodable(BoneItem.self, at: "BoneItem.json")
+                let file = try folder.file(at: "BoneItem.json")
+                let ref = try ObjectReference(file: file, object: item)
+                self.addItem(ref, named: nil, to: groupRef)
+
+                return
+            }
+
+            if let item = item, let folder = groupRef.spec.file.parent {
+                var spec = groupRef.spec.object
+                spec.groups = spec.groups.map { g in
+                    var group = g
+                    if group == groupRef.group {
+                        group.add(itemPath: item.file.path(relativeTo: folder))
+                    }
+                    return group
+                }
+                groupRef.spec.object = spec
+                try groupRef.spec.save()
+                self.selectedGroup = groupRef
+                self.reset()
+            }
+        }
+    }
+
     func addFile(named: String, destination: String, to item: ObjectReference<BoneItem>) {
         guard let folder = item.file.parent else { return }
         var item = item
@@ -230,7 +281,14 @@ extension BoneSpecsController {
             let group = self.selectedGroup
             self.selectedGroup = group
         }
+    }
 
-
+    func addSpec(named name: String, folder: String) {
+        withError { try
+            BoneSpecScaffoldCommand(path: folder, name: name)
+                .fromFolder(self.folder)
+                .execute()
+            self.reset()
+        }
     }
 }

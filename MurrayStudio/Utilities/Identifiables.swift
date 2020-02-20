@@ -22,7 +22,11 @@ extension ObjectReference: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.file.path)
         if let spec = self.object as? BoneSpec {
+            hasher.combine(spec.name)
             hasher.combine(spec.groups)
+        }
+        if let item = self.object as? BoneItem {
+            hasher.combine(item.name)
         }
     }
 }

@@ -14,35 +14,27 @@ struct BoneFilesView: View {
 
     enum Action: Identifiable {
         case rename
-        case new(ObjectReference<BoneItem>)
+        case newItem
+        case newFile(ObjectReference<BoneItem>)
         case delete
 
         var id: String {
             switch self {
             case .rename: return "rename"
+            case .newItem: return "newItem"
             case .delete: return "delete"
-            case .new(let i): return "new_\(i.object)"
+            case .newFile(let i): return "new_\(i.object)"
             }
         }
-
-        var sheetTitle: String {
+        var isNewItem: Bool {
             switch self {
-            case .rename: return "Rename File"
-            case .new: return "New File"
-            case .delete: return "Delete File"
+            case .newItem: return true
+            default: return false
             }
         }
-
-        var saveActionTitle: String {
+        var newFile: ObjectReference<BoneItem>? {
             switch self {
-            case .rename: return "Rename"
-            case .new: return "New"
-            case .delete: return "Delete"
-            }
-        }
-        var newItem: ObjectReference<BoneItem>? {
-            switch self {
-            case .new(let o): return o
+            case .newFile(let o): return o
             default: return nil
             }
         }
@@ -51,44 +43,41 @@ struct BoneFilesView: View {
     @EnvironmentObject var controller: BoneSpecsController
     //    var item: ObjectReference<BoneItem>?
     @State var action: Action?
-    @State var newItemName: String = ""
-    @State var newItemDestination: String = ""
+    @State var newFileName: String = ""
+    @State var newFileDestination: String = ""
+    @State var newItemText: String = ""
     var body: some View {
 
         GeometryReader { _ in
             HSplitView {
-                List(selection: self.$controller.selectedFile) {
-                    ForEach(self.controller.items(for: self.controller.selectedGroup), id: \.self) { item in
-                        Section(header:
-                            HStack(spacing: 2)  {
-                                Text(item.object.name)
-                                Spacer()
-                                Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-                                    .controlSize(.regular)
-                                    .onTapGesture {
-                                        self.action = .new(item)
+                VStack {
+                    List(selection: self.$controller.selectedFile) {
+                        ForEach(self.controller.items(for: self.controller.selectedGroup), id: \.self) { item in
+                            Section(header:
+                                HStack(spacing: 2)  {
+                                    Text(item.object.name)
+                                    Spacer()
+                                    Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
+                                        .controlSize(.regular)
+                                        .onTapGesture {
+                                            self.action = .newFile(item)
+                                    }
                                 }
-                            }
 
-                            .sheet(item: self.$action) { action in
-                                if action.newItem != nil {
-                                    GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Create", confirm: {
-                                        self.controller.addFile(named: self.newItemName, destination: self.newItemDestination, to: action.newItem!)
-                                    }, content: {
-                                        VStack {
-                                            Text("\(action.newItem!.object.name)")
-                                            TextField("File name", text: self.$newItemName)
-                                            TextField("Destination", text: self.$newItemDestination)
-                                        }
-                                    })
-                                } else {
-                                    EmptyView()
+
+                                .tag(item)
+                            ) {
+                                ForEach(self.controller.files(for: item), id:\.self) { file in
+                                    Text(file.name)
                                 }
-                            }.tag(item)
-                        ) {
-                            ForEach(self.controller.files(for: item), id:\.self) { file in
-                                Text(file.name)
                             }
+                        }
+                    }
+                    HStack {
+                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
+                            .controlSize(.regular)
+                            .onTapGesture {
+                                self.action = .newItem
                         }
                     }
                 }.frame(minWidth: 200)
@@ -112,10 +101,63 @@ struct BoneFilesView: View {
                     }.padding()
 
                     EditorView(controller: self.$controller.currentItemController)
+                }.sheet(item: self.$action) { action in
+                    if action.newFile != nil {
+                        GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Create", confirm: {
+                            self.action = nil
+                            self.controller.addFile(named: self.newFileName, destination: self.newFileDestination, to: action.newFile!)
+                        }, content: {
+                            VStack {
+                                Text("\(action.newFile!.object.name)")
+                                TextField("File name", text: self.$newFileName)
+                                TextField("Destination", text: self.$newFileDestination)
+                            }
+                        })
+                    }
+                    else if action.isNewItem {
+                        BoneItemPickerView( items: self.controller.allItems(), callback: { item, text in
+                            if let group = self.controller.selectedGroup {
+                                self.action = nil
+                                self.controller.addItem(item, named: text, to: group)
+                            }
+                        })
+                    }
+                    else {
+                        EmptyView()
+                    }
                 }
+                .onDisappear(perform: { self.action = nil })
+                .onAppear(perform: {
+                    self.newFileName = ""
+                    self.newFileDestination = ""
+                    self.newItemText = ""
+                })
 
             }
         }
+    }
+}
+
+struct BoneItemPickerView: View {
+    @State var text: String = ""
+    @State var selectedItem: ObjectReference<BoneItem>?
+    let items: [ObjectReference<BoneItem>]
+    let callback: (ObjectReference<BoneItem>?, String?) -> ()
+    var body: some View {
+        GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Create", confirm: { self.callback(nil, self.text) }, content:  {
+            VStack(spacing: 10) {
+                ForEach(items, id:\.self) { item in
+                    Text(item.object.name)
+                        
+                        .onTapGesture { self.callback(item, nil) }
+                }
+                VStack {
+                    Text("or")
+                    TextField("create one", text: $text)
+                }
+            }
+
+        })
     }
 }
 

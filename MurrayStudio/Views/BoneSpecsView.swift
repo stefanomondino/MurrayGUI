@@ -12,26 +12,30 @@ import MurrayKit
 
 struct BoneSpecsView: View {
 
-    enum Action: Int, Identifiable {
+    enum Action: Identifiable {
         case rename
-        case new
+        case newSpec
+        case new(ObjectReference<BoneSpec>)
         case delete
 
-        var id: Int { rawValue }
-
-        var sheetTitle: String {
+        var id: String {
             switch self {
-            case .rename: return "Rename Group"
-            case .new: return "New Group"
-            case .delete: return "Delete Group"
+            case .newSpec: return "newSpec"
+            case .rename: return "rename"
+            case .delete: return "delete"
+            case .new(let i): return "new_\(i.object)"
             }
         }
-
-        var saveActionTitle: String {
+        var isNewSpec: Bool {
             switch self {
-            case .rename: return "Rename"
-            case .new: return "New"
-            case .delete: return "Delete"
+            case .newSpec: return true
+            default: return false
+            }
+        }
+        var newItem: ObjectReference<BoneSpec>? {
+            switch self {
+            case .new(let o): return o
+            default: return nil
             }
         }
     }
@@ -40,6 +44,8 @@ struct BoneSpecsView: View {
     @State var filterString: String = ""
     @State var action: Action?
     @State var newGroupName = ""
+    @State var newSpecName = ""
+    @State var newSpecPath = ""
 
     var body: some View {
 
@@ -60,7 +66,7 @@ struct BoneSpecsView: View {
 
                     Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
                         .controlSize(.regular)
-                        .onTapGesture { print("!") }
+                        .onTapGesture { self.action = .newSpec }
                     TextField("Filter", text: self.$filterString)
 
                 }.padding(4)
@@ -72,9 +78,7 @@ struct BoneSpecsView: View {
     private func section(for spec: ObjectReference<BoneSpec>) -> some View {
         let groups = controller.groups(for: spec)
         return Group {
-            if groups.isEmpty {
-                EmptyView()
-            } else {
+
                 Section(header:
                     HStack(spacing: 2)  {
                         Text(spec.object.name.uppercased())
@@ -82,22 +86,38 @@ struct BoneSpecsView: View {
                         Spacer()
                         Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
                             .controlSize(.regular)
-                            .onTapGesture { self.action = .new }
+                            .onTapGesture { self.action = .new(spec) }
                     }
 //                    .contextMenu(ContextMenu {
 //                        Button("Add group...") { self.action = .new }
 //                    })
                         .sheet(item: self.$action) { action in
-                            if action == .new {
+                            if action.newItem != nil {
                                 GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
-                                    self.controller.addGroup(named: self.newGroupName, to: spec)
+                                    self.action = nil
+                                    self.controller.addGroup(named: self.newGroupName, to: action.newItem!)
                                 }, content: { TextField("Group name", text: self.$newGroupName) })
-                            } else {
+                            }
+                            else if action.isNewSpec {
+                                GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
+                                    self.action = nil
+                                    self.controller.addSpec(named: self.newSpecName, folder: self.newSpecPath)
+                                }, content: { VStack {
+                                    TextField("Spec name", text: self.$newSpecName)
+                                    TextField("Path", text: self.$newSpecPath)
+                                    }
+                                })
+                            }
+                            else {
                                 EmptyView()
                             }
 
 
-                    }
+                    }.onAppear(perform: {
+                        self.newSpecPath = ""
+                        self.newSpecName = ""
+                        self.newGroupName = ""
+                    }).onDisappear(perform: { self.action = nil })
                 ) {
                     ForEach(groups.filter { $0.group.contains(self.filterString) }, id: \.self) { group in
                         HStack {
@@ -108,7 +128,6 @@ struct BoneSpecsView: View {
                         .tag(group.group.name)
                     }
                 }
-            }
         }
     }
 }
