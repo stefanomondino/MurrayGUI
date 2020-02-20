@@ -72,7 +72,7 @@ struct BoneFilesView: View {
                                 }
                             }
                         }
-                    }
+                    }.listStyle(SidebarListStyle())
                     HStack {
                         Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
                             .controlSize(.regular)
