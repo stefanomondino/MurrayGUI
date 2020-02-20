@@ -45,26 +45,20 @@ struct BoneFilesView: View {
     @State var action: Action?
     @State var newFileName: String = ""
     @State var newFileDestination: String = ""
-    @State var newItemText: String = ""
+    @State var filterString: String = ""
     var body: some View {
 
         GeometryReader { _ in
             HSplitView {
                 VStack {
                     List(selection: self.$controller.selectedFile) {
-                        ForEach(self.controller.items(for: self.controller.selectedGroup), id: \.self) { item in
+                        ForEach(self.controller.items(for: self.controller.selectedGroup)/*.filter { $0.contains(self.filterString) }*/, id: \.self) { item in
                             Section(header:
                                 HStack(spacing: 2)  {
-                                    Text(item.object.name)
+                                    Text(item.object.name.uppercased())
                                     Spacer()
-                                    Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-                                        .controlSize(.regular)
-                                        .onTapGesture {
-                                            self.action = .newFile(item)
-                                    }
+                                    ControlButton(action: { self.action = .newFile(item) }, icon: NSImage.addTemplateName)
                                 }
-
-
                                 .tag(item)
                             ) {
                                 ForEach(self.controller.files(for: item), id:\.self) { file in
@@ -73,13 +67,14 @@ struct BoneFilesView: View {
                             }
                         }
                     }.listStyle(SidebarListStyle())
+                    Spacer()
                     HStack {
-                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-                            .controlSize(.regular)
-                            .onTapGesture {
-                                self.action = .newItem
-                        }
-                    }
+                        ControlButton(action: { self.action = .newItem }, icon: NSImage.addTemplateName)
+                        TextField("Filter", text: self.$filterString)
+
+                    }.padding(4)
+                    Spacer()
+
                 }.frame(minWidth: 200)
                 
 
@@ -87,11 +82,7 @@ struct BoneFilesView: View {
                     HStack {
                         VStack(alignment: .leading, spacing: 4) {
                             HStack {
-                                Text("From: ")
-                                Text(self.controller.currentItemController.source)
-                            }
-                            HStack {
-                                Text("To: ")
+                                Text("Destination: ")
                                 Text(self.controller.currentItemController.destination)
                             }
                         }.frame(idealWidth: 1000)
@@ -130,11 +121,17 @@ struct BoneFilesView: View {
                 .onAppear(perform: {
                     self.newFileName = ""
                     self.newFileDestination = ""
-                    self.newItemText = ""
                 })
 
             }
         }
+    }
+}
+extension ObjectReference where T == BoneItem  {
+    func contains(_ string: String) -> Bool {
+        let string = string.trimmingCharacters(in: .whitespacesAndNewlines)
+        if string.isEmpty { return true }
+        return object.name.lowercased().contains(string.lowercased())
     }
 }
 
@@ -158,6 +155,18 @@ struct BoneItemPickerView: View {
             }
 
         })
+    }
+}
+
+struct ControlButton: View {
+    let action: () -> ()
+    let icon: String
+    var body: some View {
+        Button(action: action) {
+            Image(nsImage: NSImage(named: icon) ?? NSImage())
+                .controlSize(.regular)
+        }
+        .buttonStyle(BorderlessButtonStyle())
     }
 }
 

@@ -11,7 +11,7 @@ import MurrayKit
 import SwiftUI
 import Files
 
-extension ObjectReference: Equatable {
+extension ObjectReference: Equatable, Comparable {
     public static func == (lhs: ObjectReference<T>, rhs: ObjectReference<T>) -> Bool {
         return lhs.file == rhs.file
     }
@@ -29,9 +29,30 @@ extension ObjectReference: Hashable {
             hasher.combine(item.name)
         }
     }
+
+    public static func <(lhs: ObjectReference, rhs: ObjectReference) -> Bool{
+        if let l = lhs as? ObjectReference<BoneSpec>, let r = rhs as? ObjectReference<BoneSpec> {
+            return l.object.name < r.object.name
+        }
+        if let l = lhs as? ObjectReference<BoneItem>, let r = rhs as? ObjectReference<BoneItem> {
+            return l.object.name < r.object.name
+        }
+        return lhs.file < rhs.file
+    }
+}
+extension File: Comparable {
+    public static func < (lhs: File, rhs: File) -> Bool {
+        lhs.path < rhs.path
+    }
+
+
 }
 
-extension BoneGroup: Hashable {
+extension BoneGroup: Hashable, Comparable {
+    public static func < (lhs: BoneGroup, rhs: BoneGroup) -> Bool {
+        lhs.name < rhs.name
+    }
+
     public static func == (lhs: BoneGroup, rhs: BoneGroup) -> Bool {
         lhs.name == rhs.name && lhs.itemPaths == rhs.itemPaths
     }
@@ -40,6 +61,7 @@ extension BoneGroup: Hashable {
         hasher.combine(itemPaths)
     }
 }
+
 
 extension File: Hashable {
 

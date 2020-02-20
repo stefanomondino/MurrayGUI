@@ -14,7 +14,14 @@ import SwiftUI
 
 class BoneSpecsController: ObservableObject {
 
-    struct GroupWithSpec: Hashable {
+    struct GroupWithSpec: Hashable, Comparable {
+        static func < (lhs: BoneSpecsController.GroupWithSpec, rhs: BoneSpecsController.GroupWithSpec) -> Bool {
+            if rhs.spec == lhs.spec {
+                return lhs.group < rhs.group
+            }
+            return lhs.spec < rhs.spec
+        }
+
         static func == (lhs: BoneSpecsController.GroupWithSpec, rhs: BoneSpecsController.GroupWithSpec) -> Bool {
             lhs.spec.object.name == rhs.spec.object.name && lhs.group.name == rhs.group.name
         }
@@ -112,9 +119,9 @@ class BoneSpecsController: ObservableObject {
     func reset() {
         self.pipeline = try? BonePipeline(folder: folder)
         self.specs = []
-        self.specs = pipeline?.specs.values.map { $0 } ?? []
+        self.specs = pipeline?.specs.values.map { $0 }.sorted(by: <) ?? []
         self.groups = specs.reduce([:]) {acc, spec in
-            let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}
+            let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}.sorted()
             return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
         }
         self.objectWillChange.send()
@@ -178,6 +185,7 @@ class BoneSpecsController: ObservableObject {
         item?.object.paths
             .map { $0.from }
             .compactMap { try? item?.file.parent?.file(at: $0) }
+            .sorted()
             ?? []
     }
     func resetContext() {
@@ -269,10 +277,12 @@ extension BoneSpecsController {
                     }
                     return group
                 }
+                self.specs = []
                 groupRef.spec.object = spec
                 try groupRef.spec.save()
-                self.selectedGroup = groupRef
                 self.reset()
+                self.selectedGroup = nil
+                self.selectedGroup = groupRef
             }
         }
     }

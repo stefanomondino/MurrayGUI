@@ -76,7 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             .embedding(rootView: MainView().environmentObject(controller))
         window.center()
         window.title = controller.folder.path
-        window.setFrameAutosaveName("Main Window")
+        window.setFrameAutosaveName(controller.folder.path)
         window.makeKeyAndOrderFront(nil)
     }
 }

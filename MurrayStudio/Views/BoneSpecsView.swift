@@ -63,10 +63,7 @@ struct BoneSpecsView: View {
                 .listStyle(SidebarListStyle())
                 Spacer()
                 HStack {
-
-                    Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-                        .controlSize(.regular)
-                        .onTapGesture { self.action = .newSpec }
+                    ControlButton(action: { self.action = .newSpec }, icon: NSImage.addTemplateName)
                     TextField("Filter", text: self.$filterString)
 
                 }.padding(4)
@@ -110,9 +107,10 @@ struct BoneSpecsView: View {
                         Text(spec.object.name.uppercased())
                         Text("(\(spec.object.groups.count))")
                         Spacer()
-                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-                            .controlSize(.regular)
-                            .onTapGesture { self.action = .new(spec) }
+                        ControlButton(action: { self.action = .new(spec) }, icon: NSImage.addTemplateName)
+//                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
+//                            .controlSize(.regular)
+//                            .onTapGesture { self.action = .new(spec) }
                     }
 //                    .contextMenu(ContextMenu {
 //                        Button("Add group...") { self.action = .new }
