@@ -70,7 +70,7 @@ class BoneItemController: ObservableObject, Identifiable {
         self.destination = ""
         self.path = BonePath(from: "", to: "")
     }
-    
+
     init(file: File?, path: BonePath, context: ContextController) {
 
         self.file = file

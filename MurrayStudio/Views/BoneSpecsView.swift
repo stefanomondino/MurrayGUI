@@ -55,7 +55,7 @@ struct BoneSpecsView: View {
                     if self.controller.isEmpty {
                         Text("No specs found in current project")
                     } else {
-                        ForEach(self.controller.specs, id:\.self) { spec in
+                        ForEach(self.controller.specs.sorted(), id:\.self) { spec in
                             self.section(for: spec)
                         }
                     }
@@ -108,9 +108,6 @@ struct BoneSpecsView: View {
                         Text("(\(spec.object.groups.count))")
                         Spacer()
                         ControlButton(action: { self.action = .new(spec) }, icon: NSImage.addTemplateName)
-//                        Image(nsImage: NSImage(named: NSImage.addTemplateName)!)
-//                            .controlSize(.regular)
-//                            .onTapGesture { self.action = .new(spec) }
                     }
 //                    .contextMenu(ContextMenu {
 //                        Button("Add group...") { self.action = .new }

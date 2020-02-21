@@ -276,9 +276,14 @@ extension BoneSpecsController {
                 self.specs = []
                 groupRef.spec.object = spec
                 try groupRef.spec.save()
-                self.reset()
                 self.selectedGroup = nil
-                self.selectedGroup = groupRef
+                self.reset()
+                if let spec = self.specs.first(where: { $0.object.name == groupRef.spec.object.name }),
+                    let group = self.groups(for: spec).first(where: { $0.group.name == groupRef.group.name }) {
+                    self.selectedGroup = group
+                }
+
+//                self.selectedGroup = groupRef
             }
         }
     }
