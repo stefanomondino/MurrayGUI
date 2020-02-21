@@ -166,21 +166,17 @@ class BoneSpecsController: ObservableObject {
     }
     func allItems() -> [ObjectReference<BoneItem>] {
 
-        guard let spec = self.selectedGroup?.spec else { return [] }
-        return (try? spec.file.parent?.subfolders.compactMap({ (folder) in
+        guard
+            let group = self.selectedGroup else { return [] }
+         let groupItems = Set(self.items(for: group))
+        return ((try? group.spec.file.parent?.subfolders.compactMap({ (folder) in
             let item = try folder.decodable(BoneItem.self, at: "BoneItem.json")
             let file = try folder.file(at: "BoneItem.json")
             return try ObjectReference(file: file, object: item)
-        })) ?? []
-
-//        guard let spec = self.selectedGroup?.spec else { return [] }
-//
-//        return Set(self.groups(for: spec)
-////            .flatMap { $0 }
-//            .flatMap { self.items(for: $0)})
-//            .map { $0 }
-
+        })) ?? [])
+            .filter { groupItems.contains($0) == false }
     }
+
     func files(for item: ObjectReference<BoneItem>?) -> [File] {
         item?.object.paths
             .map { $0.from }
@@ -255,7 +251,7 @@ extension BoneSpecsController {
         withError {
             var groupRef = groupRef
 
-            if let name = name {
+            if let name = name?.trimmingCharacters(in: .whitespacesAndNewlines), name.isEmpty == false {
                 try BoneItemScaffoldCommand(specName: groupRef.spec.object.name, name: name, files: [])
                     .fromFolder(self.folder)
                 .execute()
@@ -287,13 +283,15 @@ extension BoneSpecsController {
         }
     }
 
-    func addFile(named: String, destination: String, to item: ObjectReference<BoneItem>) {
+    func addFile(named name: String, destination: String, to item: ObjectReference<BoneItem>) {
         guard let folder = item.file.parent else { return }
+        let name = name.trimmingCharacters(in: .whitespacesAndNewlines)
+        guard !name.isEmpty else { return }
         var item = item
-        let path = BonePath(from: named, to: destination)
+        let path = BonePath(from: name, to: destination)
         item.object.add(path: path)
         withError {
-            try folder.createFile(at: named)
+            try folder.createFile(at: name)
             try item.save()
             let group = self.selectedGroup
             self.selectedGroup = group

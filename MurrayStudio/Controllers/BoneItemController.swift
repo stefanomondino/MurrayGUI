@@ -75,8 +75,6 @@ class BoneItemController: ObservableObject, Identifiable {
 
         self.file = file
         self.path = path
-        //        self.item = item
-//        self.spec = spec
         guard let file = file else { return }
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
 
