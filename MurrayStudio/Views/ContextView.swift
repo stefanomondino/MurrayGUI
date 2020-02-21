@@ -22,22 +22,22 @@ struct ContextView: View {
 
                     Section(header: Text("Local")) {
 
-                        ForEach(self.controller.contextManager.local.indices, id:\.self) { index in
+                        ForEach(self.controller.contextController.local.indices, id:\.self) { index in
                             HStack {
-                                Text(self.controller.contextManager.local[index].key)
-                                TextField(self.controller.contextManager.local[index].key, text: self.$controller.contextManager.local[index].value)
-                                    .tag(self.controller.contextManager.local[index].key)
+                                Text(self.controller.contextController.local[index].key)
+                                TextField(self.controller.contextController.local[index].key, text: self.$controller.contextController.local[index].value)
+                                    .tag(self.controller.contextController.local[index].key)
                             }
 
                         }
                     }
                     Section(header: Text("Environment")) {
 
-                        ForEach(self.controller.contextManager.environment.indices, id:\.self) { index in
+                        ForEach(self.controller.contextController.environment.indices, id:\.self) { index in
                             HStack {
-                                Text(self.controller.contextManager.environment[index].key)
-                                TextField(self.controller.contextManager.environment[index].key, text: self.$controller.contextManager.environment[index].value)
-                            }.tag(self.controller.contextManager.environment[index].key)
+                                Text(self.controller.contextController.environment[index].key)
+                                TextField(self.controller.contextController.environment[index].key, text: self.$controller.contextController.environment[index].value)
+                            }.tag(self.controller.contextController.environment[index].key)
                         }
                     }
                 }

@@ -49,9 +49,9 @@ class BoneItemController: ObservableObject, Identifiable {
             self.resolved = resolve()
         }
     }
-    @Published var resolved: String = "" {
-        willSet { objectWillChange.send() }
-    }
+    @Published var resolved: String = ""
+
+    @ObservedObject var contextController: ContextController = ContextController()
 
     private var context: BoneContext = BoneContext([:]) {
         didSet {
@@ -63,26 +63,26 @@ class BoneItemController: ObservableObject, Identifiable {
     }
     private var cancellables: [AnyCancellable] = []
     private func resolve() -> String {
-        (try? FileTemplate(fileContents: text, context: context).render()) ?? "error"
+        (try? FileTemplate(fileContents: text, context: contextController.context).render()) ?? "error"
     }
     init() {
         self.file = nil
         self.destination = ""
         self.path = BonePath(from: "", to: "")
-        context = BoneContext([:])
     }
-    init(file: File?, path: BonePath, context: ContextManager) {
+    
+    init(file: File?, path: BonePath, context: ContextController) {
 
         self.file = file
         self.path = path
+        self.contextController = context
         guard let file = file else { return }
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""
 
-        context.objectWillChange
-            .delay(for: .milliseconds(1), scheduler: RunLoop.main)
-            .prepend(())
-            .map { context.context }
-            .sink { [weak self] in self?.context = $0}
+        self.contextController.$context
+            .eraseToAnyPublisher()
+            .receive(on: RunLoop.main)
+            .assign(to: \.context, on: self)
             .store(in: &cancellables)
     }
     func restore() {

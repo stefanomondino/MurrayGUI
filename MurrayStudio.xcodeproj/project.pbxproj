@@ -15,7 +15,7 @@
 		70A817AC23FAD9FF0068A00F /* BoneItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817AB23FAD9FF0068A00F /* BoneItemController.swift */; };
 		70A817B223FD2E330068A00F /* MurrayKit in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B123FD2E330068A00F /* MurrayKit */; };
 		70A817B523FD2E5C0068A00F /* Sourceful in Frameworks */ = {isa = PBXBuildFile; productRef = 70A817B423FD2E5C0068A00F /* Sourceful */; };
-		70A817B723FD66950068A00F /* ContextManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817B623FD66950068A00F /* ContextManager.swift */; };
+		70A817B723FD66950068A00F /* ContextController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817B623FD66950068A00F /* ContextController.swift */; };
 		70A817B923FD96C10068A00F /* GroupActionSheet.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817B823FD96C10068A00F /* GroupActionSheet.swift */; };
 		70A817BB23FD9B550068A00F /* Identifiables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817BA23FD9B550068A00F /* Identifiables.swift */; };
 		70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */; };
@@ -36,7 +36,7 @@
 		70A817A723FACFE10068A00F /* SourceCodeView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SourceCodeView.swift; sourceTree = "<group>"; };
 		70A817A923FAD9B10068A00F /* EditorView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EditorView.swift; sourceTree = "<group>"; };
 		70A817AB23FAD9FF0068A00F /* BoneItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneItemController.swift; sourceTree = "<group>"; };
-		70A817B623FD66950068A00F /* ContextManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextManager.swift; sourceTree = "<group>"; };
+		70A817B623FD66950068A00F /* ContextController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContextController.swift; sourceTree = "<group>"; };
 		70A817B823FD96C10068A00F /* GroupActionSheet.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GroupActionSheet.swift; sourceTree = "<group>"; };
 		70A817BA23FD9B550068A00F /* Identifiables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiables.swift; sourceTree = "<group>"; };
 		70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MurrayStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -112,7 +112,6 @@
 				70D8E7F423FAA79E00A89C70 /* MainWindow.swift */,
 				70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */,
 				70A817BA23FD9B550068A00F /* Identifiables.swift */,
-				70A817B623FD66950068A00F /* ContextManager.swift */,
 				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
 			);
 			path = Utilities;
@@ -137,6 +136,7 @@
 			children = (
 				70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */,
 				70A817AB23FAD9FF0068A00F /* BoneItemController.swift */,
+				70A817B623FD66950068A00F /* ContextController.swift */,
 			);
 			path = Controllers;
 			sourceTree = "<group>";
@@ -224,7 +224,7 @@
 				70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */,
 				70A817B923FD96C10068A00F /* GroupActionSheet.swift in Sources */,
 				70A817BB23FD9B550068A00F /* Identifiables.swift in Sources */,
-				70A817B723FD66950068A00F /* ContextManager.swift in Sources */,
+				70A817B723FD66950068A00F /* ContextController.swift in Sources */,
 				70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */,
 				70A817A423FAB59D0068A00F /* BoneGroupView.swift in Sources */,
 				70A817A623FAB7E50068A00F /* BoneFilesView.swift in Sources */,

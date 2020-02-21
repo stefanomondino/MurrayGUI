@@ -38,20 +38,21 @@ class BoneSpecsController: ObservableObject {
     @Published var showPreview: Bool = true
     @Published var showErrorAlert: Bool = false
 
-    @ObservedObject var currentItemController: BoneItemController = BoneItemController() {
+    @Published var currentItemController: BoneItemController = BoneItemController()
+//        {
         //        willSet { objectWillChange.send() }
-        didSet {
-            //            currentItemCancellables = []
-            currentItemController
-                .objectWillChange
-                .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
-                .sink {[weak self] in self?.objectWillChange.send() }
-                .store(in: &currentItemCancellables)
+//        didSet {
+//            //            currentItemCancellables = []
+//            currentItemController
+//                .objectWillChange
+//                .delay(for: .nanoseconds(1), scheduler: RunLoop.main)
+//                .sink {[weak self] in self?.objectWillChange.send() }
+//                .store(in: &currentItemCancellables)
+//
+//        }
+//    }
 
-        }
-    }
-
-    @ObservedObject var contextManager: ContextManager
+    @Published var contextController: ContextController = ContextController()
 
     @Published var itemManager: ItemsController = ItemsController(controllers: [])
     //        {
@@ -65,7 +66,7 @@ class BoneSpecsController: ObservableObject {
 
                     BoneItemController(file: try? item.file.parent?.file(at: path.from),
                                        path: path,
-                                       context: contextManager)
+                                       context: contextController)
                     }
 
             }))
@@ -73,10 +74,12 @@ class BoneSpecsController: ObservableObject {
         }
     }
 
-    let folder: Folder
-    var pipeline: BonePipeline?
+
     @Published var groups: [String: [GroupWithSpec]] = [:]
     @Published var specs: [ObjectReference<BoneSpec>] = []
+
+    let folder: Folder
+    var pipeline: BonePipeline?
 
     var selectedGroup: GroupWithSpec? {
         //        willSet { objectWillChange.send() }
@@ -92,9 +95,6 @@ class BoneSpecsController: ObservableObject {
             if let file = selectedFile {
                 self.currentItemController = itemManager.controller(for: file)!
             }
-            //            self.objectWillChange.send()
-            self.currentItemController.objectWillChange.send()
-
         }
     }
 
@@ -114,7 +114,7 @@ class BoneSpecsController: ObservableObject {
         folder = Folder.temporary
         groups = [:]
         specs = []
-        contextManager = ContextManager()
+        contextController = ContextController()
     }
     func reset() {
         self.pipeline = try? BonePipeline(folder: folder)
@@ -139,14 +139,14 @@ class BoneSpecsController: ObservableObject {
         guard let pipeline = pipelineAttempt else { return nil }
         self.pipeline = pipeline
         self.folder = folder
-        contextManager = ContextManager(murrayFile: pipeline.murrayFile)
+        contextController = ContextController(murrayFile: pipeline.murrayFile)
 
-        contextManager.objectWillChange
-            .delay(for: .microseconds(1), scheduler: RunLoop.main)
-            .sink {[weak self] in
-                self?.currentItemController.objectWillChange.send()
-                self?.objectWillChange.send() }
-            .store(in: &cancellables)
+//        contextController.objectWillChange
+//            .delay(for: .microseconds(1), scheduler: RunLoop.main)
+//            .sink {[weak self] in
+//                self?.currentItemController.objectWillChange.send()
+//                self?.objectWillChange.send() }
+//            .store(in: &cancellables)
         reset()
     }
 
@@ -185,7 +185,7 @@ class BoneSpecsController: ObservableObject {
             ?? []
     }
     func resetContext() {
-        self.contextManager.reset()
+        self.contextController.reset()
     }
 
     var error: CustomError? {
@@ -201,7 +201,7 @@ class BoneSpecsController: ObservableObject {
             let group = self.selectedGroup else { return  }
 
         let items = self.items(for: group)
-        let context = self.contextManager.context
+        let context = self.contextController.context
         withError {
             try items.forEach { item in
 
