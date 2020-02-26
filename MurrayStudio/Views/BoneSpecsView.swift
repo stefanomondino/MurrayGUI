@@ -1,5 +1,5 @@
 //
-//  BoneSpecsView.swift
+//  BonePackagesView.swift
 //  MurrayStudio
 //
 //  Created by Stefano Mondino on 17/02/2020.
@@ -10,12 +10,12 @@ import Foundation
 import SwiftUI
 import MurrayKit
 
-struct BoneSpecsView: View {
+struct BonePackagesView: View {
 
     enum Action: Identifiable {
         case rename
         case newSpec
-        case new(ObjectReference<BoneSpec>)
+        case new(ObjectReference<BonePackage>)
         case delete
 
         var id: String {
@@ -32,15 +32,31 @@ struct BoneSpecsView: View {
             default: return false
             }
         }
-        var newItem: ObjectReference<BoneSpec>? {
+        var newItem: ObjectReference<BonePackage>? {
             switch self {
             case .new(let o): return o
             default: return nil
             }
         }
+
+        var title: String {
+            switch self {
+            case .newSpec: return "New Bone Spec"
+            case .new: return "New Bone Group"
+            default: return ""
+            }
+        }
+
+        var message: String {
+            switch self {
+            case .newSpec: return "Creates a new Bone Spec, containing groups of items."
+            case .new(let spec): return "Creates a new Bone Group in \(spec.object.name). Group0"
+            default: return "2"
+            }
+        }
     }
 
-    @EnvironmentObject var controller: BoneSpecsController
+    @EnvironmentObject var controller: BonePackagesController
     @State var filterString: String = ""
     @State var action: Action?
     @State var newGroupName = ""
@@ -51,6 +67,7 @@ struct BoneSpecsView: View {
 
         GeometryReader { _ in
             VStack(alignment: .leading, spacing: 0) {
+                Text("Bone Specs")
                 List(selection: self.$controller.selectedGroup) {
                     if self.controller.isEmpty {
                         Text("No specs found in current project")
@@ -98,14 +115,14 @@ struct BoneSpecsView: View {
         }
     }
 
-    private func section(for spec: ObjectReference<BoneSpec>) -> some View {
+    private func section(for spec: ObjectReference<BonePackage>) -> some View {
         let groups = controller.groups(for: spec)
         return Group {
 
                 Section(header:
                     HStack(spacing: 2)  {
                         Text(spec.object.name.uppercased())
-                        Text("(\(spec.object.groups.count))")
+                        Text("(\(spec.object.procedures.count))")
                         Spacer()
                         ControlButton(action: { self.action = .new(spec) }, icon: NSImage.addTemplateName)
                     }
@@ -127,7 +144,7 @@ struct BoneSpecsView: View {
     }
 }
 
-extension BoneGroup {
+extension BoneProcedure {
     func contains(_ string: String) -> Bool {
         let string = string.trimmingCharacters(in: .whitespacesAndNewlines)
         if string.isEmpty { return true }
@@ -135,8 +152,8 @@ extension BoneGroup {
     }
 }
 
-struct BoneSpecsView_Previews: PreviewProvider {
+struct BonePackagesView_Previews: PreviewProvider {
     static var previews: some View {
-        BoneSpecsView().environmentObject(BoneSpecsController.empty)
+        BonePackagesView().environmentObject(BonePackagesController.empty)
     }
 }

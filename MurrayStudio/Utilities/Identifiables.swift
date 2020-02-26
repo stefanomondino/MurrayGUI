@@ -21,9 +21,15 @@ extension ObjectReference: Equatable, Comparable {
 extension ObjectReference: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.file.path)
-        if let spec = self.object as? BoneSpec {
+        if let spec = self.object as? BonePackage {
             hasher.combine(spec.name)
-            hasher.combine(spec.groups)
+            hasher.combine(spec.procedures)
+        }
+        if let replacement = self.object as? BoneReplacement {
+            hasher.combine(replacement.placeholder)
+            hasher.combine(replacement.destinationPath)
+            hasher.combine(replacement.sourcePath)
+            hasher.combine(replacement.text)
         }
         if let item = self.object as? BoneItem {
             hasher.combine(item.name)
@@ -31,7 +37,7 @@ extension ObjectReference: Hashable {
     }
 
     public static func <(lhs: ObjectReference, rhs: ObjectReference) -> Bool{
-        if let l = lhs as? ObjectReference<BoneSpec>, let r = rhs as? ObjectReference<BoneSpec> {
+        if let l = lhs as? ObjectReference<BoneProcedure>, let r = rhs as? ObjectReference<BonePackage> {
             return l.object.name < r.object.name
         }
         if let l = lhs as? ObjectReference<BoneItem>, let r = rhs as? ObjectReference<BoneItem> {
@@ -48,17 +54,33 @@ extension File: Comparable {
 
 }
 
-extension BoneGroup: Hashable, Comparable {
-    public static func < (lhs: BoneGroup, rhs: BoneGroup) -> Bool {
+extension BoneProcedure: Hashable, Comparable {
+    public static func < (lhs: BoneProcedure, rhs: BoneProcedure) -> Bool {
         lhs.name < rhs.name
     }
 
-    public static func == (lhs: BoneGroup, rhs: BoneGroup) -> Bool {
+    public static func == (lhs: BoneProcedure, rhs: BoneProcedure) -> Bool {
         lhs.name == rhs.name && lhs.itemPaths == rhs.itemPaths
     }
     public func hash(into hasher: inout Hasher) {
         hasher.combine(name)
         hasher.combine(itemPaths)
+    }
+}
+
+extension BoneReplacement: Hashable, Comparable {
+    public static func < (lhs: BoneReplacement, rhs: BoneReplacement) -> Bool {
+        lhs.placeholder < rhs.placeholder
+    }
+
+    public static func == (lhs: BoneReplacement, rhs: BoneReplacement) -> Bool {
+        lhs.placeholder == rhs.placeholder && lhs.destinationPath == rhs.destinationPath && lhs.text == rhs.text && lhs.sourcePath == rhs.sourcePath
+    }
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(placeholder)
+        hasher.combine(destinationPath)
+        hasher.combine(sourcePath)
+        hasher.combine(text)
     }
 }
 

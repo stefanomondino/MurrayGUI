@@ -1,5 +1,5 @@
 //
-//  BoneSpecsView.swift
+//  BonePackagesView.swift
 //  MurrayStudio
 //
 //  Created by Stefano Mondino on 17/02/2020.
@@ -40,58 +40,89 @@ struct BoneFilesView: View {
         }
     }
 
-    @EnvironmentObject var controller: BoneSpecsController
-    //    var item: ObjectReference<BoneItem>?
+    @EnvironmentObject var controller: BonePackagesController
     @State var action: Action?
     @State var newFileName: String = ""
     @State var newFileDestination: String = ""
     @State var filterString: String = ""
+
+    private func files() -> some View {
+        VStack {
+            List(selection: self.$controller.selectedFile) {
+                ForEach(self.controller.items(for: self.controller.selectedGroup).filter { $0.contains(self.filterString) }, id: \.self) { item in
+                    Section(header:
+                        HStack(spacing: 2)  {
+                            Text(item.object.name.uppercased())
+                            Spacer()
+                            ControlButton(action: { self.action = .newFile(item) }, icon: NSImage.addTemplateName)
+                        }
+                        .tag(item)
+                    ) {
+                        ForEach(self.controller.files(for: item), id:\.self) { file in
+                            Text(file.name)
+                        }
+                    }
+                }
+            }
+            .listStyle(SidebarListStyle())
+            List(selection: self.$controller.selectedReplacement) {
+                ForEach(self.controller.items(for: self.controller.selectedGroup).filter { $0.contains(self.filterString) }, id: \.self) { item in
+                    Section(header:
+                        HStack(spacing: 2)  {
+                            Text(item.object.name.uppercased())
+                            Spacer()
+                            ControlButton(action: { self.action = .newFile(item) }, icon: NSImage.addTemplateName)
+                        }
+                        .tag(item)
+                    ) {
+                        ForEach(self.controller.replacements(for: item), id:\.self) { element in
+                            Text(element.object.destinationPath)
+                        }
+                    }
+                }
+            }
+            .listStyle(SidebarListStyle())
+            Spacer()
+            HStack {
+                ControlButton(action: { self.action = .newItem }, icon: NSImage.addTemplateName)
+                TextField("Filter", text: self.$filterString)
+
+            }.padding(4)
+            Spacer()
+
+        }.frame(minWidth: 200)
+    }
+
+    private func topBar() -> some View {
+        HStack {
+            VStack(alignment: .leading, spacing: 4) {
+                HStack {
+                    Text("Destination: ")
+                    Text(self.controller.currentItemController.destination)
+                }
+            }.frame(idealWidth: 1000)
+            Spacer()
+            Button("Restore", action: { self.controller.currentItemController.restore() })
+            Button("Save", action: { self.controller.currentItemController.save() })
+        }.padding()
+    }
+
+
+
     var body: some View {
 
         GeometryReader { _ in
             HSplitView {
-                VStack {
-                    List(selection: self.$controller.selectedFile) {
-                        ForEach(self.controller.items(for: self.controller.selectedGroup)/*.filter { $0.contains(self.filterString) }*/, id: \.self) { item in
-                            Section(header:
-                                HStack(spacing: 2)  {
-                                    Text(item.object.name.uppercased())
-                                    Spacer()
-                                    ControlButton(action: { self.action = .newFile(item) }, icon: NSImage.addTemplateName)
-                                }
-                                .tag(item)
-                            ) {
-                                ForEach(self.controller.files(for: item), id:\.self) { file in
-                                    Text(file.name)
-                                }
-                            }
-                        }
-                    }.listStyle(SidebarListStyle())
-                    Spacer()
-                    HStack {
-                        ControlButton(action: { self.action = .newItem }, icon: NSImage.addTemplateName)
-                        TextField("Filter", text: self.$filterString)
 
-                    }.padding(4)
-                    Spacer()
-
-                }.frame(minWidth: 200)
-                
+                self.files()
 
                 VStack(alignment: .leading) {
-                    HStack {
-                        VStack(alignment: .leading, spacing: 4) {
-                            HStack {
-                                Text("Destination: ")
-                                Text(self.controller.currentItemController.destination)
-                            }
-                        }.frame(idealWidth: 1000)
-                        Spacer()
-                        Button("Restore", action: { self.controller.currentItemController.restore() })
-                        Button("Save", action: { self.controller.currentItemController.save() })
-                    }.padding()
-
-                    EditorView(controller: self.$controller.currentItemController)
+                    self.topBar()
+                    if self.controller.selectedReplacement != nil {
+                        ReplacementView(controller: self.$controller.currentReplacementController)
+                    } else {
+                        EditorView(controller: self.$controller.currentItemController)
+                    }
                 }.sheet(item: self.$action) { action in
                     if action.newFile != nil {
                         GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Create", confirm: {
@@ -117,8 +148,8 @@ struct BoneFilesView: View {
                         EmptyView()
                     }
                 }
-                .onDisappear(perform: { self.action = nil })
                 .onAppear(perform: {
+                    self.action = nil
                     self.newFileName = ""
                     self.newFileDestination = ""
                 })
@@ -127,6 +158,7 @@ struct BoneFilesView: View {
         }
     }
 }
+
 extension ObjectReference where T == BoneItem  {
     func contains(_ string: String) -> Bool {
         let string = string.trimmingCharacters(in: .whitespacesAndNewlines)
@@ -172,6 +204,6 @@ struct ControlButton: View {
 
 struct BoneFilesView_Previews: PreviewProvider {
     static var previews: some View {
-        BoneFilesView().environmentObject(BoneSpecsController.empty)
+        BoneFilesView().environmentObject(BonePackagesController.empty)
     }
 }

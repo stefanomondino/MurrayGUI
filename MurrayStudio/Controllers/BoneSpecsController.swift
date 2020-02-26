@@ -1,5 +1,5 @@
 //
-//  BoneSpecsController.swift
+//  BonePackagesController.swift
 //  MurrayStudio
 //
 //  Created by Stefano Mondino on 17/02/2020.
@@ -12,17 +12,17 @@ import Combine
 import Files
 import SwiftUI
 
-class BoneSpecsController: ObservableObject {
+class BonePackagesController: ObservableObject {
 
     struct GroupWithSpec: Hashable, Comparable {
-        static func < (lhs: BoneSpecsController.GroupWithSpec, rhs: BoneSpecsController.GroupWithSpec) -> Bool {
+        static func < (lhs: BonePackagesController.GroupWithSpec, rhs: BonePackagesController.GroupWithSpec) -> Bool {
             if rhs.spec == lhs.spec {
                 return lhs.group < rhs.group
             }
             return lhs.spec < rhs.spec
         }
 
-        static func == (lhs: BoneSpecsController.GroupWithSpec, rhs: BoneSpecsController.GroupWithSpec) -> Bool {
+        static func == (lhs: BonePackagesController.GroupWithSpec, rhs: BonePackagesController.GroupWithSpec) -> Bool {
             lhs.spec.object.name == rhs.spec.object.name && lhs.group.name == rhs.group.name
         }
         func hash(into hasher: inout Hasher) {
@@ -30,8 +30,8 @@ class BoneSpecsController: ObservableObject {
             hasher.combine(group.name)
         }
 
-        var spec: ObjectReference<BoneSpec>
-        var group: BoneGroup
+        var spec: ObjectReference<BonePackage>
+        var group: BoneProcedure
 
     }
 
@@ -39,6 +39,7 @@ class BoneSpecsController: ObservableObject {
     @Published var showErrorAlert: Bool = false
 
     @Published var currentItemController: BoneItemController = BoneItemController()
+    @Published var currentReplacementController = BoneReplacementController()
 //        {
         //        willSet { objectWillChange.send() }
 //        didSet {
@@ -55,6 +56,7 @@ class BoneSpecsController: ObservableObject {
     @Published var contextController: ContextController = ContextController()
 
     @Published var itemManager: ItemsController = ItemsController(controllers: [])
+    @Published var replacementManager = ReplacementsController(controllers: [])
     //        {
     //        willSet { objectWillChange.send() }
     //    }
@@ -70,13 +72,19 @@ class BoneSpecsController: ObservableObject {
                     }
 
             }))
+            self.replacementManager = (ReplacementsController(controllers: currentItems
+                           .flatMap { item in item.object.replacements.compactMap { r in
+                            BoneReplacementController(file:  try? item.file.parent?.file(at: r.sourcePath ?? ""), replacement: r, context: self.contextController)
+                               }
+
+                       }))
             //            objectWillChange.send()
         }
     }
 
 
     @Published var groups: [String: [GroupWithSpec]] = [:]
-    @Published var specs: [ObjectReference<BoneSpec>] = []
+    @Published var specs: [ObjectReference<BonePackage>] = []
 
     let folder: Folder
     var pipeline: BonePipeline?
@@ -91,9 +99,18 @@ class BoneSpecsController: ObservableObject {
 
     var selectedFile: File? {
         didSet {
-            //            self.currentItemController = BoneItemController(file: selectedFile, spec: self.selectedGroup?.spec, context: contextManager)
             if let file = selectedFile {
+                selectedReplacement = nil
                 self.currentItemController = itemManager.controller(for: file)!
+            }
+        }
+    }
+
+    var selectedReplacement: ObjectReference<BoneReplacement>? {
+        didSet {
+            if let replacement = selectedReplacement {
+                self.selectedFile = nil
+                self.currentReplacementController = replacementManager.controller(for: replacement.object)!
             }
         }
     }
@@ -104,8 +121,8 @@ class BoneSpecsController: ObservableObject {
         specs.isEmpty
     }
 
-    static var empty: BoneSpecsController {
-        BoneSpecsController()
+    static var empty: BonePackagesController {
+        BonePackagesController()
     }
 
     private var cancellables: [AnyCancellable] = []
@@ -116,16 +133,18 @@ class BoneSpecsController: ObservableObject {
         specs = []
         contextController = ContextController()
     }
+
     func reset() {
         self.pipeline = try? BonePipeline(folder: folder)
         self.specs = []
-        self.specs = pipeline?.specs.values.map { $0 }.sorted(by: <) ?? []
+        self.specs = pipeline?.packages.values.map { $0 }.sorted(by: <) ?? []
         self.groups = specs.reduce([:]) {acc, spec in
-            let groups = spec.object.groups.map { GroupWithSpec(spec: spec, group: $0)}.sorted()
+            let groups = spec.object.procedures.map { GroupWithSpec(spec: spec, group: $0)}.sorted()
             return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
         }
         self.objectWillChange.send()
     }
+
     init?(url: URL) {
         guard
             let folder = try? Folder(path: url.path)
@@ -140,17 +159,10 @@ class BoneSpecsController: ObservableObject {
         self.pipeline = pipeline
         self.folder = folder
         contextController = ContextController(murrayFile: pipeline.murrayFile)
-
-//        contextController.objectWillChange
-//            .delay(for: .microseconds(1), scheduler: RunLoop.main)
-//            .sink {[weak self] in
-//                self?.currentItemController.objectWillChange.send()
-//                self?.objectWillChange.send() }
-//            .store(in: &cancellables)
         reset()
     }
 
-    func groups(for spec: ObjectReference<BoneSpec>) -> [GroupWithSpec] {
+    func groups(for spec: ObjectReference<BonePackage>) -> [GroupWithSpec] {
         groups[spec.object.name] ?? []
     }
 
@@ -164,6 +176,7 @@ class BoneSpecsController: ObservableObject {
             .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
             ?? []
     }
+
     func allItems() -> [ObjectReference<BoneItem>] {
 
         guard
@@ -183,6 +196,15 @@ class BoneSpecsController: ObservableObject {
             .compactMap { try? item?.file.parent?.file(at: $0) }
             .sorted()
             ?? []
+    }
+    func replacements(for item: ObjectReference<BoneItem>?) -> [ObjectReference<BoneReplacement>] {
+        item?.object.replacements.compactMap { replacement in
+            guard let path = replacement.sourcePath,
+                let file = try? item?.file.parent?.file(at: path) else { return nil }
+            return try? ObjectReference(file: file, object: replacement)
+            } ?? []
+//            .sorted()
+//            ?? []
     }
     func resetContext() {
         self.contextController.reset()
@@ -226,7 +248,7 @@ class BoneSpecsController: ObservableObject {
     }
 }
 
-extension BoneSpecsController {
+extension BonePackagesController {
 
     func withError(_ closure: () throws -> Void ) {
         do {
@@ -236,10 +258,10 @@ extension BoneSpecsController {
         }
     }
 
-    func addGroup(named name: String, to spec: ObjectReference<BoneSpec>) {
-        let group = BoneGroup(name: name)
+    func addGroup(named name: String, to spec: ObjectReference<BonePackage>) {
+        let group = BoneProcedure(name: name)
         var obj = spec.object
-        obj.add(group: group)
+        obj.add(procedure: group)
         if let json = obj.toJSON(),
             let data = try? JSONSerialization.data(withJSONObject: json, options: [.prettyPrinted]){
             try? spec.file.write(data)
@@ -266,7 +288,7 @@ extension BoneSpecsController {
 
             if let item = item, let folder = groupRef.spec.file.parent {
                 var spec = groupRef.spec.object
-                spec.groups = spec.groups.map { g in
+                spec.procedures = spec.procedures.map { g in
                     var group = g
                     if group == groupRef.group {
                         group.add(itemPath: item.file.path(relativeTo: folder))
@@ -305,7 +327,7 @@ extension BoneSpecsController {
 
     func addSpec(named name: String, folder: String) {
         withError { try
-            BoneSpecScaffoldCommand(path: folder, name: name)
+            BonePackageScaffoldCommand(path: folder, name: name)
                 .fromFolder(self.folder)
                 .execute()
             self.reset()

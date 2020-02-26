@@ -11,9 +11,9 @@ import SwiftUI
 import Files
 import MurrayKit
 
-struct EditorView: View {
+struct ReplacementView: View {
     @EnvironmentObject var specController: BonePackagesController
-    @Binding var controller: BoneItemController
+    @Binding var controller: BoneReplacementController
 
     var body: some View {
 

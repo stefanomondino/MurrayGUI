@@ -1,5 +1,5 @@
 //
-//  BoneGroupView.swift
+//  BoneProcedureView.swift
 //  MurrayStudio
 //
 //  Created by Stefano Mondino on 17/02/2020.
@@ -9,8 +9,8 @@
 import Foundation
 import SwiftUI
 
-struct BoneGroupView: View {
-    @EnvironmentObject var controller: BoneSpecsController
+struct BoneProcedureView: View {
+    @EnvironmentObject var controller: BonePackagesController
 
     var body: some View {
 
@@ -42,8 +42,8 @@ struct BoneGroupView: View {
     }
 }
 
-struct BoneGroupView_Previews: PreviewProvider {
+struct BoneProcedureView_Previews: PreviewProvider {
     static var previews: some View {
-        BoneGroupView().environmentObject(BoneSpecsController.empty)
+        BoneProcedureView().environmentObject(BonePackagesController.empty)
     }
 }

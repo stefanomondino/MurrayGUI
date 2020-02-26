@@ -12,35 +12,26 @@ import MurrayKit
 import SwiftUI
 import Files
 
-class ItemsController: ObservableObject {
-    @Published var controllers: [BoneItemController]
+class ReplacementsController: ObservableObject {
+    @Published var controllers: [BoneReplacementController]
 
-    init(controllers: [BoneItemController]) {
+    init(controllers: [BoneReplacementController]) {
         self.controllers = controllers
     }
 
-    func controller(for file: File) -> BoneItemController? {
-        controllers.first(where: { $0.file == file })
+    func controller(for replacement: BoneReplacement) -> BoneReplacementController? {
+        controllers.first(where: { $0.replacement == replacement })
     }
 }
 
 
-class BoneItemController: ObservableObject, Identifiable {
-//    static func == (lhs: BoneItemController, rhs: BoneItemController) -> Bool {
-//        lhs.id == rhs.id && lhs.text == rhs.text && lhs.resolved == rhs.resolved
-//    }
-//    func hash(into hasher: inout Hasher) {
-//        hasher.combine(id)
-//        hasher.combine(text)
-//        hasher.combine(resolved)
-//    }
+class BoneReplacementController: ObservableObject, Identifiable {
 
     let file: File?
-    //    let item: ObjectReference<BoneItem>
-    //let spec: ObjectReference<BonePackage>
 
-    private let path: BonePath
+    fileprivate let replacement: BoneReplacement
 
+    @Published var placeholder: String = ""
     @Published var source: String = ""
     @Published var destination: String = ""
 
@@ -56,8 +47,7 @@ class BoneItemController: ObservableObject, Identifiable {
     private var context: BoneContext = BoneContext([:]) {
         didSet {
             self.resolved = resolve()
-            self.source =  (try? path.from.resolved(with: context)) ?? ""
-            self.destination = (try? path.to.resolved(with: context)) ?? ""
+            self.destination = (try? replacement.destinationPath.resolved(with: context)) ?? ""
 
         }
     }
@@ -68,13 +58,14 @@ class BoneItemController: ObservableObject, Identifiable {
     init() {
         self.file = nil
         self.destination = ""
-        self.path = BonePath(from: "", to: "")
+        self.replacement = BoneReplacement(placeholder: "", text: "", destinationPath: "")
     }
 
-    init(file: File?, path: BonePath, context: ContextController) {
+    init(file: File?, replacement: BoneReplacement, context: ContextController) {
 
         self.file = file
-        self.path = path
+        self.placeholder = replacement.placeholder
+        self.replacement = replacement
         self.contextController = context
         guard let file = file else { return }
         text = (try? TemplateReader(source: file.parent!).string(from: file.name, context: BoneContext([:]))) ?? ""

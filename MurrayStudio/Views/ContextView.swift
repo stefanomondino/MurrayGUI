@@ -11,7 +11,7 @@ import SwiftUI
 import MurrayKit
 
 struct ContextView: View {
-    @EnvironmentObject var controller: BoneSpecsController
+    @EnvironmentObject var controller: BonePackagesController
 
     var body: some View {
 
@@ -56,6 +56,6 @@ struct ContextView: View {
 
 struct ContextView_Previews: PreviewProvider {
     static var previews: some View {
-        ContextView().environmentObject(BoneSpecsController.empty)
+        ContextView().environmentObject(BonePackagesController.empty)
     }
 }

@@ -67,7 +67,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 //    }
 
     func openMurrayWindow(url: URL) {
-        guard let controller = BoneSpecsController(url: url) else { return }
+        guard let controller = BonePackagesController(url: url) else { return }
         lastProject = url.path
         window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1600, height: 600),

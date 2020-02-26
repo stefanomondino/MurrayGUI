@@ -9,15 +9,18 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var specsController: BoneSpecsController
+    @EnvironmentObject var specsController: BonePackagesController
     var body: some View {
         GeometryReader{ g in
         HSplitView {
-            BoneSpecsView().frame(idealWidth: 300)
-            BoneGroupView().frame(idealWidth: g.size.width, maxWidth: .infinity, maxHeight: .infinity)
+            VSplitView {
+                BonePackagesView().frame(idealWidth: 300, idealHeight: 400)
+                ContextView().frame(idealHeight: 400)
+            }.frame(idealWidth: 300)
+            BoneProcedureView().frame(idealWidth: g.size.width, maxWidth: .infinity, maxHeight: .infinity)
 
 
-            ContextView().frame(idealWidth: 300)
+
         }
         }
     }
@@ -26,6 +29,6 @@ struct MainView: View {
 
 struct MainView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView().environmentObject(BoneSpecsController.empty)
+        MainView().environmentObject(BonePackagesController.empty)
     }
 }
