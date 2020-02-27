@@ -35,8 +35,17 @@ struct SubtitleStyle: ViewModifier {
     }
 }
 
+extension Image {
+    init(nsImageName: NSImage.Name) {
+        self.init(nsImage: NSImage(named: nsImageName) ?? NSImage())
+    }
+}
+
 extension Text {
     func textStyle<Style: ViewModifier>(_ style: Style) -> some View {
         ModifiedContent(content: self, modifier: style)
+    }
+    init(_ localization: Localizations) {
+        self.init(localization.translation)
     }
 }

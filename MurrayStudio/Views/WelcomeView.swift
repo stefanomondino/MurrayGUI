@@ -16,27 +16,40 @@ struct WelcomeView: View {
                 VStack(alignment: .leading, spacing: 0) {
                     Spacer()
                     VStack {
-                        Image("logo").mask(Circle())
-                        Text("Welcome to MurrayStudio")
+                        Image("logo").mask(Circle()).padding()
+                        Text(.welcomeToMurrayTitle)
                             .textStyle(TitleStyle())
+                    }
+                    Spacer()
+                    VStack {
+                        Button(action: { HistoryController.shared.openFile() }, label: {
+                            HStack {
+                                Image(nsImageName: NSImage.multipleDocumentsName)
+                                Text(.openExistingProject)
+                            }
+                            }).buttonStyle(BorderlessButtonStyle())
                     }
                     Spacer()
                 }
 
                 .frame(width: g.size.width * 0.6, height: g.size.height)
-                
-                    List(selection: self.$controller.selection) {
-                        ForEach(self.controller.history, id: \.self) { item in
-                            HStack {
-                                Image(nsImage: NSImage(named: NSImage.folderName) ?? NSImage())
-                                VStack(alignment: .leading) {
-                                    Text(item.title).textStyle(SubtitleStyle())
-                                    Text(item.path).textStyle(ContentStyle())
-                                }
-                            }
-                        }
-                    }.listStyle(PlainListStyle())
+                VStack(alignment: .leading) {
 
+                    List(selection: self.$controller.selection) {
+                        Section(header: Text(.latestDocuments)
+                            .textStyle(SubtitleStyle())) {
+                                    ForEach(self.controller.history, id: \.self) { item in
+                                        HStack {
+                                            Image(nsImageName: NSImage.folderName)
+                                            VStack(alignment: .leading) {
+                                                Text(item.title).textStyle(SubtitleStyle())
+                                                Text(item.path).textStyle(ContentStyle())
+                                            }
+                                        }
+                                    }
+                        }
+                    }
+                }
             }
         }.onDisappear(perform: { self.controller.reload()})
     }

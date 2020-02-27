@@ -17,7 +17,7 @@ struct MainView: View {
                 BonePackagesView().frame(idealWidth: 300, idealHeight: 400)
                 ContextView().frame(idealHeight: 400)
             }.frame(idealWidth: 300)
-            BoneProcedureView().frame(idealWidth: g.size.width, maxWidth: .infinity, maxHeight: .infinity)
+            BoneProcedureView().frame(idealWidth: g.size.width - 300, maxWidth: .infinity, maxHeight: .infinity)
 
 
 
