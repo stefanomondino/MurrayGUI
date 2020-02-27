@@ -12,7 +12,19 @@ import Combine
 import Files
 import SwiftUI
 
+class WindowHandler: NSObject, NSWindowDelegate {
+    let onClose: () -> ()
+    init(onClose: @escaping () -> Void = {}) {
+        self.onClose = onClose
+        super.init()
+    }
+    func windowWillClose(_ notification: Notification) {
+        onClose()
+    }
+}
+
 class BonePackagesController: ObservableObject {
+    let windowHandler: WindowHandler
 
     struct GroupWithSpec: Hashable, Comparable {
         static func < (lhs: BonePackagesController.GroupWithSpec, rhs: BonePackagesController.GroupWithSpec) -> Bool {
@@ -132,6 +144,7 @@ class BonePackagesController: ObservableObject {
         groups = [:]
         specs = []
         contextController = ContextController()
+        windowHandler = WindowHandler()
     }
 
     func reset() {
@@ -145,7 +158,7 @@ class BonePackagesController: ObservableObject {
         self.objectWillChange.send()
     }
 
-    init?(url: URL) {
+    init?(url: URL, windowHandler: WindowHandler) {
         guard
             let folder = try? Folder(path: url.path)
            else { return nil }
@@ -158,7 +171,9 @@ class BonePackagesController: ObservableObject {
         guard let pipeline = pipelineAttempt else { return nil }
         self.pipeline = pipeline
         self.folder = folder
+        self.windowHandler = windowHandler
         contextController = ContextController(murrayFile: pipeline.murrayFile)
+
         reset()
     }
 

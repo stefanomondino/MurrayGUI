@@ -65,7 +65,7 @@ struct BonePackagesView: View {
 
     var body: some View {
 
-        GeometryReader { _ in
+        GeometryReader { g in
             VStack(alignment: .leading, spacing: 0) {
                 Text("Bone Specs")
                 List(selection: self.$controller.selectedGroup) {
@@ -107,7 +107,9 @@ struct BonePackagesView: View {
                 }
 
 
-            }.onAppear(perform: {
+            }
+
+            .onAppear(perform: {
                 self.newSpecPath = ""
                 self.newSpecName = ""
                 self.newGroupName = ""

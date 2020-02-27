@@ -43,7 +43,7 @@ class ContextController: ObservableObject {
             .map { env, local in
                 BoneContext(local.dictionary, environment: env.dictionary)
         }
-        .assign(to: \.context, on: self)
+        .sink { [weak self] in self?.context = $0 }
         .store(in: &cancellables)
 
         reset()
