@@ -42,6 +42,7 @@ class HistoryController: ObservableObject {
     }
 
     func addToHistory(_ url: URL) {
+        NSDocumentController.shared.noteNewRecentDocumentURL(url)
         let item = HistoryItem(lastOpened: Date(), url: url)
         self.historyItems = ((self.historyItems ?? []).filter { $0.url != item.url } + [item]).sorted(by: >)
     }

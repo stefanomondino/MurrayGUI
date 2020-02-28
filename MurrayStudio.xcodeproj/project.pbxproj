@@ -59,7 +59,6 @@
 		70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		70D8E7DB23FA9DEE00A89C70 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		70D8E7DD23FA9DEE00A89C70 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		70D8E7DE23FA9DEE00A89C70 /* MurrayStudio.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = MurrayStudio.entitlements; sourceTree = "<group>"; };
 		70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserDefaults.swift; sourceTree = "<group>"; };
 		70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsView.swift; sourceTree = "<group>"; };
 		70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsController.swift; sourceTree = "<group>"; };
@@ -109,7 +108,6 @@
 				70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */,
 				70D8E7DA23FA9DEE00A89C70 /* Main.storyboard */,
 				70D8E7DD23FA9DEE00A89C70 /* Info.plist */,
-				70D8E7DE23FA9DEE00A89C70 /* MurrayStudio.entitlements */,
 				70D8E7D723FA9DEE00A89C70 /* Preview Content */,
 				70D8E7EF23FAA35800A89C70 /* Views */,
 			);
@@ -401,7 +399,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MurrayStudio/MurrayStudio.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MurrayStudio/Preview Content\"";
@@ -423,7 +420,6 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_ENTITLEMENTS = MurrayStudio/MurrayStudio.entitlements;
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_ASSET_PATHS = "\"MurrayStudio/Preview Content\"";
