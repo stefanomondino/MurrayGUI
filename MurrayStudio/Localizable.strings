@@ -16,3 +16,12 @@
 "procedure" = "";
 "item" = "";
 
+
+//Packages
+"packagesTitle" = "Packages";
+"newPackageTitle" = "Create a new package";
+"clonePackageTitle" = "Clone an existing package from a remote or local git repository";
+"newPackageDescription" = "A package is a reusable group of templates and procedures";
+"newPackageFieldTitle" = "Package name";
+"newPackageFieldDescription" = "Package description";
+"newPackageFieldPath" = "Package path (relative to project folder)";

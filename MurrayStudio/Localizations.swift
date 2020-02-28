@@ -18,6 +18,18 @@ enum Localizations: String {
     case package
     case procedure
     case item
+    case create
+
+    case packagesTitle
+    case newPackageTitle
+    case clonePackageTitle
+    case newPackageDescription
+    case clonePackageDescription
+    case newPackageFieldTitle
+    case newPackageFieldDescription
+    case newPackageFieldPath
+    case clonePackageFieldPath
+
 
     var translation: String {
         NSLocalizedString(rawValue, comment: "")

@@ -26,26 +26,7 @@ class WindowHandler: NSObject, NSWindowDelegate {
 class BonePackagesController: ObservableObject {
     let windowHandler: WindowHandler
 
-    struct GroupWithSpec: Hashable, Comparable {
-        static func < (lhs: BonePackagesController.GroupWithSpec, rhs: BonePackagesController.GroupWithSpec) -> Bool {
-            if rhs.spec == lhs.spec {
-                return lhs.group < rhs.group
-            }
-            return lhs.spec < rhs.spec
-        }
-
-        static func == (lhs: BonePackagesController.GroupWithSpec, rhs: BonePackagesController.GroupWithSpec) -> Bool {
-            lhs.spec.object.name == rhs.spec.object.name && lhs.group.name == rhs.group.name
-        }
-        func hash(into hasher: inout Hasher) {
-            hasher.combine(spec.object.name)
-            hasher.combine(group.name)
-        }
-
-        var spec: ObjectReference<BonePackage>
-        var group: BoneProcedure
-
-    }
+    
 
     @Published var showPreview: Bool = true
     @Published var showErrorAlert: Bool = false
@@ -96,7 +77,7 @@ class BonePackagesController: ObservableObject {
 
 
     @Published var groups: [String: [GroupWithSpec]] = [:]
-    @Published var specs: [ObjectReference<BonePackage>] = []
+    @Published var packages: [ObjectReference<BonePackage>] = []
 
     let folder: Folder
     var pipeline: BonePipeline?
@@ -130,7 +111,7 @@ class BonePackagesController: ObservableObject {
     var currentItemCancellables: [AnyCancellable] = []
 
     var isEmpty: Bool {
-        specs.isEmpty
+        packages.isEmpty
     }
 
     static var empty: BonePackagesController {
@@ -142,17 +123,17 @@ class BonePackagesController: ObservableObject {
     private init() {
         folder = Folder.temporary
         groups = [:]
-        specs = []
+        packages = []
         contextController = ContextController()
         windowHandler = WindowHandler()
     }
 
     func reset() {
         self.pipeline = try? BonePipeline(folder: folder)
-        self.specs = []
-        self.specs = pipeline?.packages.values.map { $0 }.sorted(by: <) ?? []
-        self.groups = specs.reduce([:]) {acc, spec in
-            let groups = spec.object.procedures.map { GroupWithSpec(spec: spec, group: $0)}.sorted()
+        self.packages = []
+        self.packages = pipeline?.packages.values.map { $0 }.sorted(by: <) ?? []
+        self.groups = packages.reduce([:]) {acc, spec in
+            let groups = spec.object.procedures.map { GroupWithSpec(package: spec, group: $0)}.sorted()
             return acc.merging([spec.object.name: groups], uniquingKeysWith: {a,b in b })
         }
         self.objectWillChange.send()
@@ -183,7 +164,7 @@ class BonePackagesController: ObservableObject {
 
     func items(for group: GroupWithSpec?) -> [ObjectReference<BoneItem>] {
         guard let group = group else { return []}
-        let spec = group.spec
+        let spec = group.package
         return (try? group
             .group
             .itemPaths
@@ -197,7 +178,7 @@ class BonePackagesController: ObservableObject {
         guard
             let group = self.selectedGroup else { return [] }
          let groupItems = Set(self.items(for: group))
-        return ((try? group.spec.file.parent?.subfolders.compactMap({ (folder) in
+        return ((try? group.package.file.parent?.subfolders.compactMap({ (folder) in
             let item = try folder.decodable(BoneItem.self, at: "BoneItem.json")
             let file = try folder.file(at: "BoneItem.json")
             return try ObjectReference(file: file, object: item)
@@ -289,10 +270,10 @@ extension BonePackagesController {
             var groupRef = groupRef
 
             if let name = name?.trimmingCharacters(in: .whitespacesAndNewlines), name.isEmpty == false {
-                try BoneItemScaffoldCommand(specName: groupRef.spec.object.name, name: name, files: [])
+                try BoneItemScaffoldCommand(specName: groupRef.package.object.name, name: name, files: [])
                     .fromFolder(self.folder)
                 .execute()
-                guard let folder = try groupRef.spec.file.parent?.subfolder(at: name) else { return }
+                guard let folder = try groupRef.package.file.parent?.subfolder(at: name) else { return }
                 let item = try folder.decodable(BoneItem.self, at: "BoneItem.json")
                 let file = try folder.file(at: "BoneItem.json")
                 let ref = try ObjectReference(file: file, object: item)
@@ -301,21 +282,21 @@ extension BonePackagesController {
                 return
             }
 
-            if let item = item, let folder = groupRef.spec.file.parent {
-                var spec = groupRef.spec.object
-                spec.procedures = spec.procedures.map { g in
+            if let item = item, let folder = groupRef.package.file.parent {
+                var package = groupRef.package.object
+                package.procedures = package.procedures.map { g in
                     var group = g
                     if group == groupRef.group {
                         group.add(itemPath: item.file.path(relativeTo: folder))
                     }
                     return group
                 }
-                self.specs = []
-                groupRef.spec.object = spec
-                try groupRef.spec.save()
+                self.packages = []
+                groupRef.package.object = package
+                try groupRef.package.save()
                 self.selectedGroup = nil
                 self.reset()
-                if let spec = self.specs.first(where: { $0.object.name == groupRef.spec.object.name }),
+                if let spec = self.packages.first(where: { $0.object.name == groupRef.package.object.name }),
                     let group = self.groups(for: spec).first(where: { $0.group.name == groupRef.group.name }) {
                     self.selectedGroup = group
                 }
@@ -340,12 +321,20 @@ extension BonePackagesController {
         }
     }
 
-    func addSpec(named name: String, folder: String) {
+    func addPackage(named name: String, description: String? = nil, folder: String) {
         withError { try
-            BonePackageScaffoldCommand(path: folder, name: name)
+            BonePackageScaffoldCommand(path: folder, name: name, description: description)
                 .fromFolder(self.folder)
                 .execute()
             self.reset()
+        }
+    }
+
+    func clone(from url: String) {
+        withError {
+            try BoneCloneCommand(url: url)
+                .fromFolder(self.folder)
+                .execute()
         }
     }
 }

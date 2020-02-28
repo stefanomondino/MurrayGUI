@@ -39,13 +39,7 @@ struct WelcomeView: View {
                         Section(header: Text(.latestDocuments)
                             .textStyle(SubtitleStyle())) {
                                     ForEach(self.controller.history, id: \.self) { item in
-                                        HStack {
-                                            Image(nsImageName: NSImage.folderName)
-                                            VStack(alignment: .leading) {
-                                                Text(item.title).textStyle(SubtitleStyle())
-                                                Text(item.path).textStyle(ContentStyle())
-                                            }
-                                        }
+                                        ItemView(title: item.title, subtitle: item.path, nsImageName: NSImage.folderName)
                                     }
                         }
                     }

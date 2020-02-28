@@ -72,12 +72,12 @@ struct BonePackagesView: View {
                     if self.controller.isEmpty {
                         Text("No specs found in current project")
                     } else {
-                        ForEach(self.controller.specs.sorted(), id:\.self) { spec in
+                        ForEach(self.controller.packages.sorted(), id:\.self) { spec in
                             self.section(for: spec)
                         }
                     }
                 }
-                .listStyle(SidebarListStyle())
+//                .listStyle(SidebarListStyle())
                 Spacer()
                 HStack {
                     ControlButton(action: { self.action = .newSpec }, icon: NSImage.addTemplateName)
@@ -95,7 +95,7 @@ struct BonePackagesView: View {
                 else if action.isNewSpec {
                     GroupActionSheet(message: "test", informativeText: "test", confirmationTitle: "Test", confirm: {
                         self.action = nil
-                        self.controller.addSpec(named: self.newSpecName, folder: self.newSpecPath)
+                        self.controller.addPackage(named: self.newSpecName, folder: self.newSpecPath)
                     }, content: { VStack {
                         TextField("Spec name", text: self.$newSpecName)
                         TextField("Path", text: self.$newSpecPath)

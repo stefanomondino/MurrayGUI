@@ -49,3 +49,8 @@ extension Text {
         self.init(localization.translation)
     }
 }
+extension TextField where Label == Text {
+    init(_ localization: Localizations, text: Binding<String>) {
+        self.init(localization.translation, text: text)
+    }
+}

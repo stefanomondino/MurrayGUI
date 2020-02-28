@@ -79,14 +79,15 @@ class HistoryController: ObservableObject {
                 self?.openWelcome()
             }
         }
-        guard let controller = BonePackagesController(url: url, windowHandler: handler) else { return }
+        guard let controller = BonePackagesController(url: url, windowHandler: handler),
+        let packageController = PackagesController(url: url) else { return }
         addToHistory(url)
         addToOpened(url)
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1600, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered, defer: false)
-            .embedding(rootView: MainView().environmentObject(controller))
+            .embedding(rootView: MainView().environmentObject(controller).environmentObject(packageController))
         //        (NSApplication.shared.delegate as? AppDelegate)?.window = window
         window.center()
         window.title = controller.folder.path

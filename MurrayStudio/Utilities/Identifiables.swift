@@ -54,6 +54,27 @@ extension File: Comparable {
 
 }
 
+struct GroupWithSpec: Hashable, Comparable {
+    static func < (lhs: GroupWithSpec, rhs: GroupWithSpec) -> Bool {
+        if rhs.package == lhs.package {
+            return lhs.group < rhs.group
+        }
+        return lhs.package < rhs.package
+    }
+
+    static func == (lhs: GroupWithSpec, rhs: GroupWithSpec) -> Bool {
+        lhs.package.object.name == rhs.package.object.name && lhs.group.name == rhs.group.name
+    }
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(package.object.name)
+        hasher.combine(group.name)
+    }
+
+    var package: ObjectReference<BonePackage>
+    var group: BoneProcedure
+
+}
+
 extension BoneProcedure: Hashable, Comparable {
     public static func < (lhs: BoneProcedure, rhs: BoneProcedure) -> Bool {
         lhs.name < rhs.name

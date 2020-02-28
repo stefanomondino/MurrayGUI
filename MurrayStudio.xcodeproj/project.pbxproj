@@ -24,6 +24,9 @@
 		70A817BB23FD9B550068A00F /* Identifiables.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70A817BA23FD9B550068A00F /* Identifiables.swift */; };
 		70C529D9240868FB00871864 /* Localizations.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C529D8240868FB00871864 /* Localizations.swift */; };
 		70C529E924086CBC00871864 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = 70C529E824086CBC00871864 /* Localizable.strings */; };
+		70C52A0E240980E900871864 /* PackagesView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C52A0D240980E900871864 /* PackagesView.swift */; };
+		70C52A102409832200871864 /* ItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C52A0F2409832200871864 /* ItemView.swift */; };
+		70C52A1224098E4D00871864 /* PackagesController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70C52A1124098E4D00871864 /* PackagesController.swift */; };
 		70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */; };
 		70D8E7D623FA9DEE00A89C70 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */; };
 		70D8E7D923FA9DEE00A89C70 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 70D8E7D823FA9DEE00A89C70 /* Preview Assets.xcassets */; };
@@ -53,6 +56,9 @@
 		70A817BA23FD9B550068A00F /* Identifiables.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Identifiables.swift; sourceTree = "<group>"; };
 		70C529D8240868FB00871864 /* Localizations.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Localizations.swift; sourceTree = "<group>"; };
 		70C529E824086CBC00871864 /* Localizable.strings */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; path = Localizable.strings; sourceTree = "<group>"; };
+		70C52A0D240980E900871864 /* PackagesView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackagesView.swift; sourceTree = "<group>"; };
+		70C52A0F2409832200871864 /* ItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ItemView.swift; sourceTree = "<group>"; };
+		70C52A1124098E4D00871864 /* PackagesController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PackagesController.swift; sourceTree = "<group>"; };
 		70D8E7CE23FA9DEC00A89C70 /* MurrayStudio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MurrayStudio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		70D8E7D123FA9DEC00A89C70 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		70D8E7D523FA9DEE00A89C70 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -138,7 +144,9 @@
 			isa = PBXGroup;
 			children = (
 				70A817B823FD96C10068A00F /* GroupActionSheet.swift */,
+				70C52A0F2409832200871864 /* ItemView.swift */,
 				70D8E7F923FAA83C00A89C70 /* MainView.swift */,
+				70C52A0D240980E900871864 /* PackagesView.swift */,
 				70D8E7ED23FAA35400A89C70 /* BoneSpecsView.swift */,
 				702F61DB2407C0F0009939CE /* WelcomeView.swift */,
 				70A817A123FAADF00068A00F /* ContextView.swift */,
@@ -153,6 +161,7 @@
 		70D8E7F623FAA7E500A89C70 /* Controllers */ = {
 			isa = PBXGroup;
 			children = (
+				70C52A1124098E4D00871864 /* PackagesController.swift */,
 				70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */,
 				702F61E12407CE2D009939CE /* HistoryController.swift */,
 				702F61DD2407C20C009939CE /* WelcomeController.swift */,
@@ -243,6 +252,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				70C52A0E240980E900871864 /* PackagesView.swift in Sources */,
 				7B7E6586240419CE0039954B /* BoneReplacementController.swift in Sources */,
 				70A817A223FAADF00068A00F /* ContextView.swift in Sources */,
 				70D8E7F323FAA3B400A89C70 /* BoneSpecsController.swift in Sources */,
@@ -252,6 +262,7 @@
 				70A817B723FD66950068A00F /* ContextController.swift in Sources */,
 				70A817AA23FAD9B10068A00F /* EditorView.swift in Sources */,
 				70A817A423FAB59D0068A00F /* BoneGroupView.swift in Sources */,
+				70C52A1224098E4D00871864 /* PackagesController.swift in Sources */,
 				70A817A623FAB7E50068A00F /* BoneFilesView.swift in Sources */,
 				70C529D9240868FB00871864 /* Localizations.swift in Sources */,
 				702F61E22407CE2D009939CE /* HistoryController.swift in Sources */,
@@ -261,6 +272,7 @@
 				70D8E7D223FA9DEC00A89C70 /* AppDelegate.swift in Sources */,
 				702F61DC2407C0F0009939CE /* WelcomeView.swift in Sources */,
 				70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */,
+				70C52A102409832200871864 /* ItemView.swift in Sources */,
 				7B7E6584240419AF0039954B /* ReplacementView.swift in Sources */,
 				70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */,
 				70D8E7EE23FAA35400A89C70 /* BoneSpecsView.swift in Sources */,
