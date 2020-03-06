@@ -33,16 +33,16 @@ class PackageController: ObservableObject {
         self.proceduresController.update(procedures: procedures)
     }
     
-    func items(for group: ProcedureWithPackage?) -> [ObjectReference<BoneItem>] {
-        guard let group = group else { return []}
-        let spec = group.package
-        return (try? group
-            .procedure
-            .itemPaths
-            .compactMap { try spec.file.parent?.file(at: $0) }
-            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
-            ?? []
-    }
+//    func items(for group: ProcedureWithPackage?) -> [ObjectReference<BoneItem>] {
+//        guard let group = group else { return []}
+//        let spec = group.package
+//        return (try? group
+//            .procedure
+//            .itemPaths
+//            .compactMap { try spec.file.parent?.file(at: $0) }
+//            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
+//            ?? []
+//    }
 
     func allItems() -> [ObjectReference<BoneItem>] {
         return Array(Set(procedures.flatMap { procedure -> [ObjectReference<BoneItem>] in

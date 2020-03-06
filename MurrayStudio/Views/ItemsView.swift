@@ -14,8 +14,8 @@ import Combine
 struct ItemsView: View {
     @ObservedObject var controller: ItemsController
     var body: some View {
-
-            HSplitView {
+        
+        HSplitView {
             List(selection: self.$controller.selectedFile) {
                 ForEach(self.controller.items, id: \.self) { item in
                     Section(header:
@@ -27,21 +27,22 @@ struct ItemsView: View {
                             ItemView(title: file.file.name,
                                      subtitle: file.object.to,
                                      nsImageName: NSImage.multipleDocumentsName)
-                            .tag(file)
+                                .tag(file)
                         }
                     }
                 }
             }
-            .frame(minWidth: 200, idealWidth: 200)
-            if self.controller.currentFileController != nil {
-                EditorView(controller: self.controller.currentFileController!)
-                    .frame(idealWidth: 500)
-
-            } else {
-                Spacer()
-
-
-            }
+            .frame(minWidth: 200)
+            .layoutPriority(1)
+            GeometryReader { _ in
+                if self.controller.currentFileController != nil {
+                    EditorView(controller: self.controller.currentFileController!)
+                        .frame(idealWidth: 500)
+                    
+                } else {
+                    Spacer()
+                }
+            }.layoutPriority(2)
         }
     }
 }

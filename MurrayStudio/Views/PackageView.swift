@@ -10,23 +10,44 @@ import Foundation
 import SwiftUI
 
 struct PackageView: View {
+    @EnvironmentObject var packagesController: PackagesController
     @ObservedObject var controller: PackageController
+    @State private var currentTab = 10
     var body: some View {
-        GeometryReader { g in
+        VSplitView {
+            GeometryReader { _ in
             VStack {
                 VStack {
                     Text(self.controller.package.object.name).textStyle(TitleStyle())
                     Text(self.controller.package.object.name).textStyle(SubtitleStyle())
                 }
-                TabView {
+                TabView(selection: self.$currentTab) {
                     ItemsView(controller: self.controller.itemsController)
                         .tabItem { Text("Items") }
-                        .tag(0)
+                        .tag(10)
+                        .padding()
                     ProceduresView(controller: self.controller.proceduresController)
                         .tabItem { Text("Procedures") }
-                        .tag(1)
+                        .tag(20)
+                    .padding()
                 }
             }
+            }
+        .padding()
+            .layoutPriority(2)
+
+            VStack {
+                Text("Context")
+                ForEach(self.packagesController.contextController.local.indices, id:\.self) { index in
+                    HStack {
+                        Text(self.packagesController.contextController.local[index].key)
+                        TextField(self.packagesController.contextController.local[index].key, text: self.$packagesController.contextController.local[index].value)
+                            .tag(self.packagesController.contextController.local[index].key)
+                    }
+                }
+            }
+        .padding()
+            .layoutPriority(1)
         }
     }
 }

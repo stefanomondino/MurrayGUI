@@ -50,8 +50,8 @@
         "package": "Murray",
         "repositoryURL": "https://github.com/synesthesia-it/Murray",
         "state": {
-          "branch": "v2",
-          "revision": "cf506bd3e937490d5eac087cc9eda290f43657a1",
+          "branch": "master",
+          "revision": "dbe089b40061e4a3313e009c42c66ec5c6189294",
           "version": null
         }
       },

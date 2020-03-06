@@ -32,7 +32,7 @@ class PackagesController: ErrorObservableObject {
     @Published var packages: [Package] = []
     @Published var currentPackage: Package?
     @Published var currentPackageController: PackageController?
-    @Published var contextController: ContextController
+    @Published var contextController: ContextController!
     let windowHandler: WindowHandler
     private var pipeline: BonePipeline?
     private var folder: Folder
@@ -51,11 +51,20 @@ class PackagesController: ErrorObservableObject {
             pipelineAttempt = try? BonePipeline(folder: folder)
 
         }
-        guard let pipeline = pipelineAttempt else { return nil }
+        guard let pipeline = pipelineAttempt,
+            let file = try? folder.file(at: MurrayFile.fileName),
+            let murrayFile = try? ObjectReference(file: file, object: pipeline.murrayFile) else { return nil }
         self.windowHandler = windowHandler
         self.pipeline = pipeline
         self.folder = folder
-        contextController = ContextController(murrayFile: pipeline.murrayFile)
+
+        contextController = ContextController(murrayFile: Binding(get: {[weak self] in
+            self?.reset()
+            return try! ObjectReference(file: file, object: self?.pipeline?.murrayFile ?? MurrayFile())
+        }, set: {[weak self] _, _ in
+            self?.reset()
+        }
+        ))
 
         self.$currentPackage
             .map {[weak self] in PackageController(package: $0, context: self?.contextController) }

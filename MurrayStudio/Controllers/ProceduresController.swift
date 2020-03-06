@@ -18,11 +18,36 @@ class ProceduresController: ObservableObject {
 
     @Published var procedures: [Procedure] = []
     @Published var selectedProcedure: Procedure?
-    
+    @Published var currentProcedureController: ProcedureController?
+    var items: [Procedure: [Item]] = [:]
+    var cancellables: [AnyCancellable] = []
     init(package: Package) {
         self.package = package
+        $selectedProcedure.map {[weak self] in
+            guard let p = $0 else { return nil }
+            return ProcedureController(procedure: p, items: self?.items[p] ?? [])
+        }.assign(to: \.currentProcedureController, on: self)
+        .store(in: &cancellables)
     }
+
     func update(procedures: [Procedure]) {
         self.procedures = procedures
+        self.items = procedures
+            .reduce([:]) { a, p in
+                var acc = a
+                acc[p] = self.items(for: p)
+                return acc
+        }
+    }
+    func items(for procedure: ProcedureWithPackage?) -> [Item] {
+        guard let procedure = procedure else { return []}
+        let spec = procedure.package
+        return (try? procedure
+            .procedure
+            .itemPaths
+            .compactMap { try spec.file.parent?.file(at: $0) }
+            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
+            ?? []
     }
 }
+

@@ -14,13 +14,25 @@ import Combine
 struct ProceduresView: View {
     @ObservedObject var controller: ProceduresController
     var body: some View {
-        GeometryReader { g in
+        HSplitView {
             List(selection: self.$controller.selectedProcedure) {
                 ForEach(self.controller.procedures, id: \.self) { item in
-                    Text(item.procedure.name)
+                    ItemView(title: item.procedure.name,
+                             subtitle: "\(item.procedure.itemPaths.count) items",
+                        nsImageName: NSImage.multipleDocumentsName)
                         .tag(item)
                 }
             }
+            .frame(minWidth: 200)
+            .layoutPriority(1)
+            GeometryReader { _ in
+                if  self.controller.currentProcedureController != nil {
+                SummaryView(controller: self.controller.currentProcedureController!)
+                } else {
+                    Text("!")
+                }
+            }
+            .layoutPriority(2)
         }
     }
 }

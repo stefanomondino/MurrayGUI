@@ -9,25 +9,36 @@
 import SwiftUI
 
 struct MainView: View {
-//    @EnvironmentObject var specsController: BonePackagesController
+    //    @EnvironmentObject var specsController: BonePackagesController
     
     @EnvironmentObject var packagesController: PackagesController
+    @State private var currentTab = 0
     var body: some View {
-        GeometryReader{ g in
-        HSplitView {
-            VSplitView {
-                PackagesView()
-            }
-            .frame(minWidth: 200)
-            Group {
-                if self.packagesController.currentPackageController != nil {
-                    PackageView(controller: self.packagesController.currentPackageController!)
-                } else {
-                    Text("!")
+            HSplitView {
+                VSplitView {
+
+                    TabView(selection: self.$currentTab) {
+                        PackagesView()
+                            .tabItem({ Text(.packagesTitle)})
+                            .tag(40)
+                        ContextView()
+                            .tabItem({ Text("Environment")})
+                            .tag(50)
+                    }
                 }
-            }.frame(idealWidth: g.size.width * 0.66, maxWidth: .infinity, maxHeight: .infinity)
-        }
-        }
+                .frame(minWidth: 200)
+                .layoutPriority(1)
+                GeometryReader { _ in
+                    if self.packagesController.currentPackageController != nil {
+                        PackageView(controller: self.packagesController.currentPackageController!)
+                    } else {
+                        Text("!")
+                        .padding()
+                    }
+                }
+                .layoutPriority(2)
+            }
+
     }
 }
 

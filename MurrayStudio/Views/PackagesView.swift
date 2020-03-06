@@ -22,9 +22,8 @@ struct PackagesView: View {
     @State private var clonePackagePath = ""
 
     var body: some View {
-        GeometryReader { g in
+        VStack {
             VStack(alignment: .leading) {
-                Text(.packagesTitle).textStyle(SubtitleStyle())
                 if self.controller.packages.isEmpty {
                     Text(.packagesTitle)
                 } else {
