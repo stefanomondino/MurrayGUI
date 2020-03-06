@@ -9,20 +9,23 @@
 import SwiftUI
 
 struct MainView: View {
-    @EnvironmentObject var specsController: BonePackagesController
+//    @EnvironmentObject var specsController: BonePackagesController
+    
     @EnvironmentObject var packagesController: PackagesController
     var body: some View {
         GeometryReader{ g in
         HSplitView {
             VSplitView {
                 PackagesView()
-//                BonePackagesView().frame(idealWidth: 300, idealHeight: 400)
-//                ContextView().frame(idealHeight: 400)
-            }.frame(idealWidth: 300)
-            BoneProcedureView().frame(idealWidth: g.size.width - 300, maxWidth: .infinity, maxHeight: .infinity)
-
-
-
+            }
+            .frame(minWidth: 200)
+            Group {
+                if self.packagesController.currentPackageController != nil {
+                    PackageView(controller: self.packagesController.currentPackageController!)
+                } else {
+                    Text("!")
+                }
+            }.frame(idealWidth: g.size.width * 0.66, maxWidth: .infinity, maxHeight: .infinity)
         }
         }
     }

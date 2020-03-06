@@ -79,19 +79,19 @@ class HistoryController: ObservableObject {
                 self?.openWelcome()
             }
         }
-        guard let controller = BonePackagesController(url: url, windowHandler: handler),
-        let packageController = PackagesController(url: url) else { return }
+//        guard let controller = PackagesController(url: url, windowHandler: handler),
+        guard let controller = PackagesController(url: url, windowHandler: handler) else { return }
         addToHistory(url)
         addToOpened(url)
         let window = NSWindow(
             contentRect: NSRect(x: 0, y: 0, width: 1600, height: 600),
             styleMask: [.titled, .closable, .miniaturizable, .resizable, .fullSizeContentView],
             backing: .buffered, defer: false)
-            .embedding(rootView: MainView().environmentObject(controller).environmentObject(packageController))
+            .embedding(rootView: MainView().environmentObject(controller))
         //        (NSApplication.shared.delegate as? AppDelegate)?.window = window
         window.center()
-        window.title = controller.folder.path
-        window.setFrameAutosaveName(controller.folder.path)
+        window.title = controller.url.path
+        window.setFrameAutosaveName(controller.url.path)
         window.makeKeyAndOrderFront(nil)
         window.isReleasedWhenClosed = false
         window.delegate = controller.windowHandler
@@ -138,8 +138,8 @@ class HistoryController: ObservableObject {
     func windowWillClose(_ notification: Notification) {
         if let window = notification.object as? NSWindow,
             let content = window.contentView as? NSHostingView<MainView> {
-            let controller = content.rootView.specsController
-            let url = controller.folder.url
+            let controller = content.rootView.packagesController
+            let url = controller.url
             self.removeFromOpened(HistoryItem(lastOpened: Date(), url: url))
         }
     }

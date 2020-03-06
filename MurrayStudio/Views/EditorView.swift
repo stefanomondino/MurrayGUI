@@ -12,15 +12,15 @@ import Files
 import MurrayKit
 
 struct EditorView: View {
-    @EnvironmentObject var specController: BonePackagesController
-    @Binding var controller: BoneItemController
+    @EnvironmentObject var packagesController: PackagesController
+    @ObservedObject var controller: EditorController
 
     var body: some View {
 
         VStack {
             HStack {
                 SourceCodeView(text: self.$controller.text)
-                if self.specController.showPreview {
+                if self.controller.showPreview {
                     SourceCodeView(text: self.$controller.resolved)
                 }
             }

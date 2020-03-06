@@ -115,9 +115,3 @@ extension PackagesView {
         }
     }
 }
-
-struct PackagesView_Previews: PreviewProvider {
-    static var previews: some View {
-        PackagesView().environmentObject(BonePackagesController.empty)
-    }
-}

@@ -12,10 +12,12 @@ import SwiftUI
 struct ItemView: View {
     let title: String
     let subtitle: String
-    let nsImageName: String
+    let nsImageName: String?
     var body: some View {
         HStack {
-            Image(nsImageName: nsImageName)
+            if nsImageName != nil {
+                Image(nsImageName: nsImageName!)
+            }
             VStack(alignment: .leading) {
                 Text(title).textStyle(SubtitleStyle())
                 Text(subtitle).textStyle(ContentStyle())

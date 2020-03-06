@@ -34,6 +34,23 @@ struct SubtitleStyle: ViewModifier {
             .foregroundColor(.primary)
     }
 }
+struct NameStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.subheadline)
+            .lineSpacing(4)
+            .foregroundColor(.primary)
+    }
+}
+struct PathStyle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.caption)
+            .lineSpacing(4)
+            .foregroundColor(.primary)
+    }
+}
+
 
 extension Image {
     init(nsImageName: NSImage.Name) {

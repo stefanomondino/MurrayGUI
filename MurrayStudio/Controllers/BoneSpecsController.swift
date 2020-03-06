@@ -12,16 +12,6 @@ import Combine
 import Files
 import SwiftUI
 
-class WindowHandler: NSObject, NSWindowDelegate {
-    let onClose: () -> ()
-    init(onClose: @escaping () -> Void = {}) {
-        self.onClose = onClose
-        super.init()
-    }
-    func windowWillClose(_ notification: Notification) {
-        onClose()
-    }
-}
 
 class BonePackagesController: ObservableObject {
     let windowHandler: WindowHandler

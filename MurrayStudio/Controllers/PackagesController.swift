@@ -14,17 +14,34 @@ import Files
 
 typealias Package = ObjectReference<BonePackage>
 
+class WindowHandler: NSObject, NSWindowDelegate {
+    let onClose: () -> ()
+    init(onClose: @escaping () -> Void = {}) {
+        self.onClose = onClose
+        super.init()
+    }
+    func windowWillClose(_ notification: Notification) {
+        onClose()
+    }
+}
+
 class PackagesController: ErrorObservableObject {
     @Published var error: CustomError?
-
+    
 //    @Binding var selectedPackage: Package
     @Published var packages: [Package] = []
     @Published var currentPackage: Package?
-
+    @Published var currentPackageController: PackageController?
+    @Published var contextController: ContextController
+    let windowHandler: WindowHandler
     private var pipeline: BonePipeline?
     private var folder: Folder
+    private var cancellables: [AnyCancellable] = []
 
-    init?(url: URL) {
+    var url: URL {
+        folder.url
+    }
+    init?(url: URL, windowHandler: WindowHandler) {
         guard
             let folder = try? Folder(path: url.path)
             else { return nil }
@@ -35,9 +52,15 @@ class PackagesController: ErrorObservableObject {
 
         }
         guard let pipeline = pipelineAttempt else { return nil }
+        self.windowHandler = windowHandler
         self.pipeline = pipeline
         self.folder = folder
-//        contextController = ContextController(murrayFile: pipeline.murrayFile)
+        contextController = ContextController(murrayFile: pipeline.murrayFile)
+
+        self.$currentPackage
+            .map {[weak self] in PackageController(package: $0, context: self?.contextController) }
+            .sink { [weak self] in self?.currentPackageController = $0 }
+            .store(in: &cancellables)
 
         reset()
     }
