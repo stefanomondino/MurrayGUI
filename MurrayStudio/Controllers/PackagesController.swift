@@ -78,7 +78,34 @@ class PackagesController: ErrorObservableObject {
         self.packages = []
         self.packages = pipeline?.packages.values.map { $0 }.sorted(by: <) ?? []
     }
+    func run(procedure: Procedure) {
+        guard
+            let pipeline = self.pipeline,
+            let folder = procedure.package.file.parent else { return  }
 
+        let items = procedure.items()
+        let context = self.contextController.context
+        withError {
+            try items.forEach { item in
+
+                try pipeline.pluginManager.execute(phase: .beforeItemReplace(item: item, context: context), from: self.folder)
+
+                try item.object.paths.forEach({ (path) in
+
+                    if let folder = item.file.parent {
+                        try pipeline.transform(path: path, sourceFolder: folder, with: context)
+                    }
+                })
+                try item.object.replacements.forEach({ replacement in
+                    try pipeline.replace(from: replacement, sourceFolder: folder, with: context)
+                })
+
+                try pipeline.pluginManager.execute(phase: .afterItemReplace(item: item, context: context), from: self.folder)
+
+            }
+            return
+        }
+    }
 }
 
 extension PackagesController {
@@ -109,6 +136,7 @@ extension ErrorObservableObject {
         do {
             try closure()
         } catch let error {
+            print(error)
             self.error = error as? CustomError ?? .generic
         }
     }

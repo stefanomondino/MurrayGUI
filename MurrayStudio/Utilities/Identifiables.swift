@@ -72,7 +72,14 @@ struct ProcedureWithPackage: Hashable, Comparable {
 
     var package: ObjectReference<BonePackage>
     var procedure: BoneProcedure
-
+    
+    func items() -> [Item] {
+        return (try? self.procedure
+            .itemPaths
+            .compactMap { try self.package.file.parent?.file(at: $0) }
+            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
+            ?? []
+    }
 }
 
 extension BoneProcedure: Hashable, Comparable {

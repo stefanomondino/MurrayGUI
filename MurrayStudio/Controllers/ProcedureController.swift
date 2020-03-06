@@ -12,7 +12,9 @@ import Combine
 
 class ProcedureController: ObservableObject {
     @Published var items: [Item]
+    var procedure: Procedure
     init(procedure: Procedure, items: [Item]) {
         self.items = items
+        self.procedure = procedure
     }
 }

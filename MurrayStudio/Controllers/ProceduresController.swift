@@ -41,13 +41,8 @@ class ProceduresController: ObservableObject {
     }
     func items(for procedure: ProcedureWithPackage?) -> [Item] {
         guard let procedure = procedure else { return []}
-        let spec = procedure.package
-        return (try? procedure
-            .procedure
-            .itemPaths
-            .compactMap { try spec.file.parent?.file(at: $0) }
-            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
-            ?? []
+        return procedure.items()
     }
+    
 }
 
