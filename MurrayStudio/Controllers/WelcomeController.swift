@@ -10,6 +10,8 @@ import SwiftUI
 import Combine
 
 class WelcomeController: ObservableObject {
+//    private var _text = ""
+    @Published var text: String = "HELLO"
     @Published var history: [HistoryItem] = []
     @Published var selection: HistoryItem? {
         didSet {
@@ -19,8 +21,19 @@ class WelcomeController: ObservableObject {
             }
         }
     }
+
+    var cancellables: [AnyCancellable] = []
     init() {
         reload()
+
+        $text
+            .map { String($0.prefix(5)) }
+            .removeDuplicates() 
+            .print()
+            .sink { self.text = $0 }
+            .store(in: &cancellables)
+
+
     }
     func reload() {
         self.history = HistoryController.shared.history()

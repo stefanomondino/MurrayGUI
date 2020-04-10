@@ -12,32 +12,48 @@ struct MainView: View {
     //    @EnvironmentObject var specsController: BonePackagesController
     
     @EnvironmentObject var packagesController: PackagesController
-    @State private var currentTab = 0
+    @State private var currentTab = 1
     var body: some View {
-            HSplitView {
-                VSplitView {
+        HSplitView {
 
-                    TabView(selection: self.$currentTab) {
-                        PackagesView()
-                            .tabItem({ Text(.packagesTitle)})
-                            .tag(40)
-                        ContextView()
-                            .tabItem({ Text("Environment")})
-                            .tag(50)
-                    }
-                }
-                .frame(minWidth: 200)
-                .layoutPriority(1)
-                GeometryReader { _ in
-                    if self.packagesController.currentPackageController != nil {
-                        PackageView(controller: self.packagesController.currentPackageController!)
-                    } else {
-                        Text("!")
-                        .padding()
-                    }
-                }
-                .layoutPriority(2)
+
+            TabView(selection: self.$currentTab) {
+                PackagesView()
+                    .tabItem({ Text(.packagesTitle)})
+                    .tag(1)
+                ContextView()
+                    .tabItem({ Text("Environment")})
+                    .tag(2)
             }
+            .frame(minWidth: 200)
+            .layoutPriority(1)
+            GeometryReader { _ in
+                if self.packagesController.currentPackageController != nil {
+                    PackageView(controller: self.packagesController.currentPackageController!)
+                } else {
+                    Text("!")
+                        .padding()
+                }
+            }
+            .layoutPriority(2)
+//            if self.packagesController.currentPackageController != nil {
+//                TabView {
+//                    Text("Current package")
+//                        .tabItem({Text("Package")})
+//                        if self.packagesController.currentPackageController!.itemsController.currentFileController != nil {
+//                        Text("File")
+//                        .tabItem({Text("File")})
+//                    }
+//                    if self.packagesController.currentPackageController!.proceduresController.currentProcedureController != nil {
+//                        Text("Procedure")
+//                            .tabItem({Text("Procedure")})
+//                    }
+//
+//                }
+//                .frame(minWidth: 200)
+//                .layoutPriority(1)
+//            }
+        }
 
     }
 }

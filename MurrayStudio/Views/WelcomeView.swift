@@ -10,6 +10,7 @@ import SwiftUI
 
 struct WelcomeView: View {
     @ObservedObject var controller: WelcomeController
+
     var body: some View {
         GeometryReader { g in
             HStack {
@@ -19,6 +20,7 @@ struct WelcomeView: View {
                         Image("logo").mask(Circle()).padding()
                         Text(.welcomeToMurrayTitle)
                             .textStyle(TitleStyle())
+
                     }
                     Spacer()
                     VStack {

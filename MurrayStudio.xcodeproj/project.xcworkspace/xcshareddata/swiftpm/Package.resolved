@@ -2,30 +2,21 @@
   "object": {
     "pins": [
       {
+        "package": "AEXML",
+        "repositoryURL": "https://github.com/tadija/AEXML",
+        "state": {
+          "branch": null,
+          "revision": "e4d517844dd03dac557e35d77a8e9ab438de91a6",
+          "version": "4.4.0"
+        }
+      },
+      {
         "package": "Commander",
         "repositoryURL": "https://github.com/kylef/Commander.git",
         "state": {
           "branch": null,
           "revision": "4b6133c3071d521489a80c38fb92d7983f19d438",
           "version": "0.9.1"
-        }
-      },
-      {
-        "package": "CwlCatchException",
-        "repositoryURL": "https://github.com/mattgallagher/CwlCatchException.git",
-        "state": {
-          "branch": null,
-          "revision": "7cd2f8cacc4d22f21bc0b2309c3b18acf7957b66",
-          "version": "1.2.0"
-        }
-      },
-      {
-        "package": "CwlPreconditionTesting",
-        "repositoryURL": "https://github.com/mattgallagher/CwlPreconditionTesting.git",
-        "state": {
-          "branch": null,
-          "revision": "c228db5d2ad1b01ebc84435e823e6cca4e3db98b",
-          "version": "1.2.0"
         }
       },
       {
@@ -51,7 +42,7 @@
         "repositoryURL": "https://github.com/synesthesia-it/Murray",
         "state": {
           "branch": "master",
-          "revision": "dbe089b40061e4a3313e009c42c66ec5c6189294",
+          "revision": "43782ab5c46a9a731dd628e7a895ce3380ab73f9",
           "version": null
         }
       },
@@ -60,8 +51,8 @@
         "repositoryURL": "https://github.com/Quick/Nimble.git",
         "state": {
           "branch": null,
-          "revision": "b02b00b30b6353632aa4a5fb6124f8147f7140c0",
-          "version": "8.0.5"
+          "revision": "7fd118ec8795888bcbbebc1a41f6984454c4cd6f",
+          "version": "8.0.7"
         }
       },
       {
@@ -105,7 +96,7 @@
         "repositoryURL": "https://github.com/twostraws/Sourceful.git",
         "state": {
           "branch": "master",
-          "revision": "442989f8e9d290f9c3b893d907a90937b80870c3",
+          "revision": "aa87f034e6d6d6c8e5b5e7992d66805678b01fb1",
           "version": null
         }
       },
@@ -125,6 +116,24 @@
           "branch": "master",
           "revision": "9c3468e300ba75ede0d7eb4c495897e0ac3591c3",
           "version": null
+        }
+      },
+      {
+        "package": "XcodeProj",
+        "repositoryURL": "https://github.com/tuist/xcodeproj.git",
+        "state": {
+          "branch": null,
+          "revision": "912d40cc2ea4a300eff6dd7c6a10b4f4dedbcbec",
+          "version": "7.10.0"
+        }
+      },
+      {
+        "package": "XcodeProjCExt",
+        "repositoryURL": "https://github.com/tuist/XcodeProjCExt",
+        "state": {
+          "branch": null,
+          "revision": "21a510c225ff2bc83d5920a21d902af4b1e7e218",
+          "version": "0.1.0"
         }
       }
     ]
