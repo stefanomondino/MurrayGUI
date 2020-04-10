@@ -17,40 +17,58 @@ public struct TabBar<SelectionValue, Content>: View where SelectionValue: Hashab
         self.model = TabBarModel(selection: selection)
         self.content = content()
     }
-
+    @State private var tabSize: CGSize = .zero
     public var body: some View {
-        GeometryReader { proxy in
+//        GeometryReader { proxy in
 
             VStack(spacing: 0) {
+                Text(self.tabSize.height.description)
                 TabBarPlaceholder()
-                 ZStack {
+
+                    .frame(height: self.tabSize.height)
+                    
+                ZStack {
                     self.content
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
                         .environmentObject(self.model)
-            }
-        }
-
-        .overlayPreferenceValue(TabBarItemPreferenceKey.self, { preferences in
-            VStack(spacing: 0) {
-                HStack(spacing: 0) {
-                    ForEach(preferences) { preference in
-                        preference.label
-                            .frame(width: proxy.size.width / CGFloat(preferences.count))
-                            .onTapGesture {
-                                if let i = preference.index as? SelectionValue {
-                                    self.model.selection = i
-                                }
-                        }
-                    }
                 }
-                .frame(height: 44)
-                Spacer()
             }
-        })
+            .overlayPreferenceValue(TabBarItemPreferenceKey.self, { preferences in
+
+                        HStack(spacing: 4) {
+                            Spacer()
+                            ForEach(preferences) { preference in
+                                preference.label
+                                    .onTapGesture {
+                                        if let i = preference.index as? SelectionValue {
+                                            self.model.selection = i
+                                        }
+                                }
+                            }
+                            Spacer()
+                        }
+                        .frame(height: 44)
+
+
+            }).modifier(SizeModifier())
+                .onPreferenceChange(TabBarSizePreferenceKey.self) {
+                    if self.tabSize != $0 { self.tabSize = $0 }
         }
+//        }
     }
 }
 
+struct SizeModifier: ViewModifier {
+    private var sizeView: some View {
+        GeometryReader { geometry in
+            Color.clear.preference(key: TabBarSizePreferenceKey.self, value: geometry.size)
+        }
+    }
+
+    func body(content: Content) -> some View {
+        content.background(sizeView)
+    }
+}
 extension TabBar where SelectionValue == Int {
 
     public init(@ViewBuilder content: () -> Content) {
@@ -110,6 +128,14 @@ struct TabBarItemSelectedModifier: ViewModifier {
     }
 }
 
+struct TabBarSizePreferenceKey: PreferenceKey {
+    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
+        value = nextValue()
+    }
+
+    typealias Value = CGSize
+    static var defaultValue: CGSize = .zero
+}
 
 struct TabBarItemPreferenceKey: PreferenceKey {
 

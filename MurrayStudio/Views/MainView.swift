@@ -18,11 +18,13 @@ struct MainView: View {
             VStack {
                 TabBar(selection: self.$currentTab) {
                     PackagesView()
-                        .tabBarItem(0){ Image(nsImageName: NSImage.multipleDocumentsName) }
+                        .tabBarItem(0){
+                            GoogleMaterialDesignType.addBox
+                    }
 //                        .tag(1)
 
                     ContextView()
-                        .tabBarItem(1){ Text("Environment")}
+                        .tabBarItem(1){ GoogleMaterialDesignType.settingsApplications }
 //                        .tag(2)
                 }
             }
@@ -62,6 +64,8 @@ struct MainView: View {
 
 //struct MainView_Previews: PreviewProvider {
 //    static var previews: some View {
-//        MainView().environmentObject(BonePackagesController.empty)
+//        MainView().environmentObject(PackagesController.empty)
 //    }
 //}
+
+
