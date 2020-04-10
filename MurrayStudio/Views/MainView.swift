@@ -12,18 +12,19 @@ struct MainView: View {
     //    @EnvironmentObject var specsController: BonePackagesController
     
     @EnvironmentObject var packagesController: PackagesController
-    @State private var currentTab = 1
+    @State private var currentTab = 0
     var body: some View {
         HSplitView {
+            VStack {
+                TabBar(selection: self.$currentTab) {
+                    PackagesView()
+                        .tabBarItem(0){ Image(nsImageName: NSImage.multipleDocumentsName) }
+//                        .tag(1)
 
-
-            TabView(selection: self.$currentTab) {
-                PackagesView()
-                    .tabItem({ Text(.packagesTitle)})
-                    .tag(1)
-                ContextView()
-                    .tabItem({ Text("Environment")})
-                    .tag(2)
+                    ContextView()
+                        .tabBarItem(1){ Text("Environment")}
+//                        .tag(2)
+                }
             }
             .frame(minWidth: 200)
             .layoutPriority(1)

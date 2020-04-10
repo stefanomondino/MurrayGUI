@@ -29,7 +29,7 @@ struct PackagesView: View {
                 } else {
                     List(selection: self.$controller.currentPackage) {
                         ForEach(self.controller.packages, id: \.self) {
-                        PackageItemView(package: $0)
+                            PackageItemView(package: $0)
                         }
                     }
                 }

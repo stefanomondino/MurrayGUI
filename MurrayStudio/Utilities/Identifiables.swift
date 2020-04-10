@@ -17,7 +17,11 @@ extension ObjectReference: Equatable, Comparable {
     }
 
 }
-
+extension ObjectReference: Identifiable {
+    public var id: String {
+        return file.path
+    }
+}
 extension ObjectReference: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.file.path)

@@ -21,15 +21,15 @@ struct PackageView: View {
                     Text(self.controller.package.object.name).textStyle(TitleStyle())
                     Text(self.controller.package.object.name).textStyle(SubtitleStyle())
                 }
-                TabView(selection: self.$currentTab) {
+                TabBar(selection: self.$currentTab) {
                     ItemsView(controller: self.controller.itemsController)
-                        .tabItem { Text("Items") }
+                        .tabBarItem(0) { Text("Items") }
                         .tag(10)
                         .padding()
                     ProceduresView(controller: self.controller.proceduresController)
-                        .tabItem { Text("Procedures") }
+                        .tabBarItem(1) { Text("Procedures") }
                         .tag(20)
-                    .padding()
+                        .padding()
                 }
             }
             }

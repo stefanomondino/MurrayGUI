@@ -42,6 +42,7 @@
 		70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */; };
 		70D8E7F523FAA79E00A89C70 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F423FAA79E00A89C70 /* MainWindow.swift */; };
 		70D8E7FA23FAA83C00A89C70 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F923FAA83C00A89C70 /* MainView.swift */; };
+		70E9CBF824408CEC00AF68E2 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -86,6 +87,7 @@
 		70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsController.swift; sourceTree = "<group>"; };
 		70D8E7F423FAA79E00A89C70 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		70D8E7F923FAA83C00A89C70 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
+		70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
 		7B7E6583240419AF0039954B /* ReplacementView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReplacementView.swift; sourceTree = "<group>"; };
 		7B7E6585240419CE0039954B /* BoneReplacementController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneReplacementController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -152,6 +154,7 @@
 				702F61DF2407C677009939CE /* Style.swift */,
 				70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */,
 				70A817BA23FD9B550068A00F /* Identifiables.swift */,
+				70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */,
 				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
 				703BD75724129E2400146D1D /* Combine.swift */,
 			);
@@ -307,6 +310,7 @@
 				70C52A70240FCF6400871864 /* ProceduresController.swift in Sources */,
 				70C52A6C240FC78D00871864 /* PackageController.swift in Sources */,
 				700E57622411587C0020094A /* EditorView.swift in Sources */,
+				70E9CBF824408CEC00AF68E2 /* CustomTabView.swift in Sources */,
 				70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */,
 				702F61E02407C677009939CE /* Style.swift in Sources */,
 			);
