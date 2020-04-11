@@ -9,71 +9,68 @@
 import SwiftUI
 
 public struct TabBar<SelectionValue, Content>: View where SelectionValue: Hashable, Content: View {
-
+    public enum Position {
+        case top
+        case bottom
+    }
     private let model: TabBarModel<SelectionValue>
     private let content: Content
 
-    public init(selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
+    public init(position: Position = .top, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
         self.model = TabBarModel(selection: selection)
         self.content = content()
+        self.position = position
     }
-    @State private var tabSize: CGSize = .zero
+    let position: Position
+    @State private var items: [TabBarItemPreferenceKey.Item] = []
     public var body: some View {
-//        GeometryReader { proxy in
-
-            VStack(spacing: 0) {
-                Text(self.tabSize.height.description)
-                TabBarPlaceholder()
-
-                    .frame(height: self.tabSize.height)
-                    
+        VStack(spacing: 0) {
+            if position == .bottom {
                 ZStack {
                     self.content
-                        .frame(maxWidth: .infinity, maxHeight: .infinity)
+                        .environmentObject(self.model)
+                }
+                Divider()
+            }
+            HStack(spacing: 4) {
+                Spacer()
+                ForEach(self.items, id:\.self) { item in
+                    item.label
+                        .onTapGesture {
+                            if let i = item.index as? SelectionValue {
+                                self.model.selection = i
+                            }
+                    }
+                }.padding(4)
+                Spacer()
+            }
+            if position == .top {
+                Divider()
+                ZStack {
+                    self.content
                         .environmentObject(self.model)
                 }
             }
-            .overlayPreferenceValue(TabBarItemPreferenceKey.self, { preferences in
-
-                        HStack(spacing: 4) {
-                            Spacer()
-                            ForEach(preferences) { preference in
-                                preference.label
-                                    .onTapGesture {
-                                        if let i = preference.index as? SelectionValue {
-                                            self.model.selection = i
-                                        }
-                                }
-                            }
-                            Spacer()
-                        }
-                        .frame(height: 44)
 
 
-            }).modifier(SizeModifier())
-                .onPreferenceChange(TabBarSizePreferenceKey.self) {
-                    if self.tabSize != $0 { self.tabSize = $0 }
         }
-//        }
+        .overlayPreferenceValue(TabBarItemPreferenceKey.self) { p in
+            { () -> Color in
+                DispatchQueue.main.async {
+                    self.items = p
+                }
+                return Color.clear
+            }()
+        }
     }
 }
 
-struct SizeModifier: ViewModifier {
-    private var sizeView: some View {
-        GeometryReader { geometry in
-            Color.clear.preference(key: TabBarSizePreferenceKey.self, value: geometry.size)
-        }
-    }
-
-    func body(content: Content) -> some View {
-        content.background(sizeView)
-    }
-}
 extension TabBar where SelectionValue == Int {
 
-    public init(@ViewBuilder content: () -> Content) {
+    public init(position: Position = .top, @ViewBuilder content: () -> Content) {
         self.model = TabBarModel(selection: .constant(0))
         self.content = content()
+        self.position = position
     }
 
 }
@@ -124,7 +121,8 @@ struct TabBarItemSelectedModifier: ViewModifier {
 
     func body(content: Content) -> some View {
         content
-            .opacity(isSelected ? 1 : 0.7)
+            .foregroundColor(isSelected ? Color("accent") : .secondary)
+//            .opacity(isSelected ? 1 : 0.7)
     }
 }
 
@@ -139,11 +137,18 @@ struct TabBarSizePreferenceKey: PreferenceKey {
 
 struct TabBarItemPreferenceKey: PreferenceKey {
 
-    struct Item: Identifiable {
+    struct Item: Identifiable, Hashable {
+        static func == (lhs: TabBarItemPreferenceKey.Item, rhs: TabBarItemPreferenceKey.Item) -> Bool {
+            lhs.id == rhs.id
+        }
+
         let id = UUID()
         let index: Any
         let label: AnyView
 
+        func hash(into hasher: inout Hasher) {
+            hasher.combine(id)
+        }
         init<V: View>(index: Any, label: V) {
             self.index = index
             self.label = AnyView(label)
@@ -163,6 +168,6 @@ public struct TabBarPlaceholder: View {
 
     public var body: some View {
         Color.clear
-            .frame(height: 44)
+        //            .frame(height: 44)
     }
 }

@@ -19,12 +19,12 @@ struct MainView: View {
                 TabBar(selection: self.$currentTab) {
                     PackagesView()
                         .tabBarItem(0){
-                            GoogleMaterialDesignType.addBox
+                            GoogleMaterialDesign(.addBox)
                     }
 //                        .tag(1)
 
                     ContextView()
-                        .tabBarItem(1){ GoogleMaterialDesignType.settingsApplications }
+                        .tabBarItem(1){ GoogleMaterialDesign(.settingsApplications)}
 //                        .tag(2)
                 }
             }
