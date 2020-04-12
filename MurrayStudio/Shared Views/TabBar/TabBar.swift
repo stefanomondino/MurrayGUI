@@ -53,8 +53,6 @@ public struct TabBar<SelectionValue, Content>: View where SelectionValue: Hashab
                         .environmentObject(self.model)
                 }
             }
-
-
         }
         .overlayPreferenceValue(TabBarItemPreferenceKey.self) { p in
             { () -> Color in

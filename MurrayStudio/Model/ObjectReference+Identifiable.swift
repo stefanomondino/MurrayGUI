@@ -17,11 +17,13 @@ extension ObjectReference: Equatable, Comparable {
     }
 
 }
+
 extension ObjectReference: Identifiable {
     public var id: String {
         return file.path
     }
 }
+
 extension ObjectReference: Hashable {
     public func hash(into hasher: inout Hasher) {
         hasher.combine(self.file.path)
@@ -48,41 +50,6 @@ extension ObjectReference: Hashable {
             return l.object.name < r.object.name
         }
         return lhs.file < rhs.file
-    }
-}
-extension File: Comparable {
-    public static func < (lhs: File, rhs: File) -> Bool {
-        lhs.path < rhs.path
-    }
-
-
-}
-
-struct ProcedureWithPackage: Hashable, Comparable {
-    static func < (lhs: ProcedureWithPackage, rhs: ProcedureWithPackage) -> Bool {
-        if rhs.package == lhs.package {
-            return lhs.procedure < rhs.procedure
-        }
-        return lhs.package < rhs.package
-    }
-
-    static func == (lhs: ProcedureWithPackage, rhs: ProcedureWithPackage) -> Bool {
-        lhs.package.object.name == rhs.package.object.name && lhs.procedure.name == rhs.procedure.name
-    }
-    func hash(into hasher: inout Hasher) {
-        hasher.combine(package.object.name)
-        hasher.combine(procedure.name)
-    }
-
-    var package: ObjectReference<BonePackage>
-    var procedure: BoneProcedure
-    
-    func items() -> [Item] {
-        return (try? self.procedure
-            .itemPaths
-            .compactMap { try self.package.file.parent?.file(at: $0) }
-            .map { try ObjectReference(file: $0, object: $0.decodable(BoneItem.self))})
-            ?? []
     }
 }
 
@@ -113,14 +80,6 @@ extension BoneReplacement: Hashable, Comparable {
         hasher.combine(destinationPath)
         hasher.combine(sourcePath)
         hasher.combine(text)
-    }
-}
-
-
-extension File: Hashable {
-
-    public func hash(into hasher: inout Hasher) {
-        hasher.combine(path)
     }
 }
 

@@ -9,8 +9,6 @@
 import SwiftUI
 
 struct MainView: View {
-    //    @EnvironmentObject var specsController: BonePackagesController
-    
     @EnvironmentObject var packagesController: PackagesController
     @State private var currentTab: Int = 0
     var body: some View {
@@ -26,9 +24,8 @@ struct MainView: View {
                     ContextView()
                         .tabBarItem(1){
                             MaterialDesignIconView(.permIdentity)
-                            .toolTip(.context)
+                                .toolTip(.context)
                     }
-//                        .tag(2)
                 }
             }
             .frame(minWidth: 200)
@@ -37,38 +34,19 @@ struct MainView: View {
                 if self.packagesController.currentPackageController != nil {
                     PackageView(controller: self.packagesController.currentPackageController!)
                 } else {
-                    Text("!")
-                        .padding()
+                    VStack {
+                        Spacer()
+                        HStack {
+                            Spacer()
+                            Text("Empty")
+                            Spacer()
+                        }
+                        Spacer()
+                    }
                 }
             }
             .layoutPriority(2)
-//            if self.packagesController.currentPackageController != nil {
-//                TabView {
-//                    Text("Current package")
-//                        .tabItem({Text("Package")})
-//                        if self.packagesController.currentPackageController!.itemsController.currentFileController != nil {
-//                        Text("File")
-//                        .tabItem({Text("File")})
-//                    }
-//                    if self.packagesController.currentPackageController!.proceduresController.currentProcedureController != nil {
-//                        Text("Procedure")
-//                            .tabItem({Text("Procedure")})
-//                    }
-//
-//                }
-//                .frame(minWidth: 200)
-//                .layoutPriority(1)
-//            }
         }
 
     }
 }
-
-
-//struct MainView_Previews: PreviewProvider {
-//    static var previews: some View {
-//        MainView().environmentObject(PackagesController.empty)
-//    }
-//}
-
-

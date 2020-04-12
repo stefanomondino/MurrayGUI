@@ -17,21 +17,22 @@ struct PackageView: View {
         VSplitView {
             GeometryReader { _ in
             VStack {
-                VStack {
-                    Text(self.controller.package.object.name).textStyle(TitleStyle())
-                    Text(self.controller.package.object.name).textStyle(SubtitleStyle())
-                }
+//                VStack {
+//                    Text(self.controller.package.object.name).textStyle(TitleStyle())
+//                    Text(self.controller.package.object.name).textStyle(SubtitleStyle())
+//                }
                 TabBar(selection: self.$currentTab) {
                     ItemsView(controller: self.controller.itemsController)
-                        .tabBarItem(0) { Text("Items") }
+                        .tabBarItem(0) {
+                            Text("Items (\(self.controller.itemsController.items.count))").frame(height: 20)
+                    }
                         .padding()
                     ProceduresView(controller: self.controller.proceduresController)
-                        .tabBarItem(1) { Text("Procedures") }
+                        .tabBarItem(1) { Text("Procedures (\(self.controller.proceduresController.procedures.count))") }
                         .padding()
                 }
             }
             }
-        .padding()
             .layoutPriority(2)
 
             VStack {
