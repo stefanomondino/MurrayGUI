@@ -19,7 +19,7 @@ struct ProceduresView: View {
                 ForEach(self.controller.procedures, id: \.self) { item in
                     ItemView(title: item.procedure.name,
                              subtitle: "\(item.procedure.itemPaths.count) items",
-                        icon: .googleMaterialDesign(.playCircleOutline))
+                        icon: .playCircleOutline)
                         .tag(item)
                 }
             }

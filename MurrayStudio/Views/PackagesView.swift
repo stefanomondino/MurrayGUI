@@ -89,7 +89,7 @@ struct PackageItemView: View {
     var body: some View {
         ItemView(title: package.object.name,
                  subtitle: "\(package.object.procedures.count)",
-            icon: .googleMaterialDesign(.folder))
+            icon: .folder)
     }
 }
 

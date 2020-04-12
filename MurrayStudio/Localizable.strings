@@ -25,3 +25,7 @@
 "newPackageFieldTitle" = "Package name";
 "newPackageFieldDescription" = "Package description";
 "newPackageFieldPath" = "Package path (relative to project folder)";
+
+
+
+

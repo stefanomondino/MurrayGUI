@@ -19,13 +19,13 @@ struct MainView: View {
                 TabBar(selection: self.$currentTab) {
                     PackagesView()
                         .tabBarItem(0){
-                            FontIconView(.googleMaterialDesign(.archive))
+                            MaterialDesignIconView(.archive)
                                 .toolTip(.packagesTitle)
                     }
 
                     ContextView()
                         .tabBarItem(1){
-                            FontIconView(.googleMaterialDesign(GoogleMaterialDesignType.permIdentity))
+                            MaterialDesignIconView(.permIdentity)
                             .toolTip(.context)
                     }
 //                        .tag(2)
