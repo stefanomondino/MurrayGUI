@@ -42,7 +42,7 @@
 		70D8E7EC23FAA24600A89C70 /* UserDefaults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */; };
 		70D8E7F523FAA79E00A89C70 /* MainWindow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F423FAA79E00A89C70 /* MainWindow.swift */; };
 		70D8E7FA23FAA83C00A89C70 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70D8E7F923FAA83C00A89C70 /* MainView.swift */; };
-		70E9CBF824408CEC00AF68E2 /* CustomTabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */; };
+		70E9CBF824408CEC00AF68E2 /* CustomTabBar.swift in Sources */ = {isa = PBXBuildFile; fileRef = 70E9CBF724408CEC00AF68E2 /* CustomTabBar.swift */; };
 		70E9CC092440D26A00AF68E2 /* Icofont.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70E9CBFA2440D26A00AF68E2 /* Icofont.ttf */; };
 		70E9CC0A2440D26A00AF68E2 /* MapIcons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70E9CBFB2440D26A00AF68E2 /* MapIcons.ttf */; };
 		70E9CC0B2440D26A00AF68E2 /* Dripicons.ttf in Resources */ = {isa = PBXBuildFile; fileRef = 70E9CBFC2440D26A00AF68E2 /* Dripicons.ttf */; };
@@ -103,7 +103,7 @@
 		70D8E7F223FAA3B400A89C70 /* BoneSpecsController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BoneSpecsController.swift; sourceTree = "<group>"; };
 		70D8E7F423FAA79E00A89C70 /* MainWindow.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainWindow.swift; sourceTree = "<group>"; };
 		70D8E7F923FAA83C00A89C70 /* MainView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabView.swift; sourceTree = "<group>"; };
+		70E9CBF724408CEC00AF68E2 /* CustomTabBar.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomTabBar.swift; sourceTree = "<group>"; };
 		70E9CBFA2440D26A00AF68E2 /* Icofont.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Icofont.ttf; sourceTree = "<group>"; };
 		70E9CBFB2440D26A00AF68E2 /* MapIcons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = MapIcons.ttf; sourceTree = "<group>"; };
 		70E9CBFC2440D26A00AF68E2 /* Dripicons.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Dripicons.ttf; sourceTree = "<group>"; };
@@ -156,6 +156,7 @@
 		70D8E7D023FA9DEC00A89C70 /* MurrayStudio */ = {
 			isa = PBXGroup;
 			children = (
+				70E9CC1A24422B2000AF68E2 /* Shared Views */,
 				70E9CBF92440D26A00AF68E2 /* Fonts */,
 				703BD7A924130E2300146D1D /* MurrayStudio.entitlements */,
 				70D8E7F623FAA7E500A89C70 /* Controllers */,
@@ -188,8 +189,6 @@
 				702F61DF2407C677009939CE /* Style.swift */,
 				70D8E7EB23FAA24600A89C70 /* UserDefaults.swift */,
 				70A817BA23FD9B550068A00F /* Identifiables.swift */,
-				70E9CBF724408CEC00AF68E2 /* CustomTabView.swift */,
-				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
 				703BD75724129E2400146D1D /* Combine.swift */,
 			);
 			path = Utilities;
@@ -257,6 +256,31 @@
 				70E9CC082440D26A00AF68E2 /* MaterialIcons.ttf */,
 			);
 			path = Fonts;
+			sourceTree = "<group>";
+		};
+		70E9CC1A24422B2000AF68E2 /* Shared Views */ = {
+			isa = PBXGroup;
+			children = (
+				70E9CC1C24422B9600AF68E2 /* SourceCode */,
+				70E9CC1B24422B2F00AF68E2 /* TabBar */,
+			);
+			path = "Shared Views";
+			sourceTree = "<group>";
+		};
+		70E9CC1B24422B2F00AF68E2 /* TabBar */ = {
+			isa = PBXGroup;
+			children = (
+				70E9CBF724408CEC00AF68E2 /* CustomTabBar.swift */,
+			);
+			path = TabBar;
+			sourceTree = "<group>";
+		};
+		70E9CC1C24422B9600AF68E2 /* SourceCode */ = {
+			isa = PBXGroup;
+			children = (
+				70A817A723FACFE10068A00F /* SourceCodeView.swift */,
+			);
+			path = SourceCode;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -382,7 +406,7 @@
 				70C52A70240FCF6400871864 /* ProceduresController.swift in Sources */,
 				70C52A6C240FC78D00871864 /* PackageController.swift in Sources */,
 				700E57622411587C0020094A /* EditorView.swift in Sources */,
-				70E9CBF824408CEC00AF68E2 /* CustomTabView.swift in Sources */,
+				70E9CBF824408CEC00AF68E2 /* CustomTabBar.swift in Sources */,
 				70A817A823FACFE10068A00F /* SourceCodeView.swift in Sources */,
 				702F61E02407C677009939CE /* Style.swift in Sources */,
 			);

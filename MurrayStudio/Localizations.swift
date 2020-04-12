@@ -30,6 +30,7 @@ enum Localizations: String {
     case newPackageFieldPath
     case clonePackageFieldPath
 
+    case context
 
     var translation: String {
         NSLocalizedString(rawValue, comment: "")

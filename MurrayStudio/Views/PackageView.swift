@@ -24,11 +24,9 @@ struct PackageView: View {
                 TabBar(selection: self.$currentTab) {
                     ItemsView(controller: self.controller.itemsController)
                         .tabBarItem(0) { Text("Items") }
-                        .tag(10)
                         .padding()
                     ProceduresView(controller: self.controller.proceduresController)
                         .tabBarItem(1) { Text("Procedures") }
-                        .tag(20)
                         .padding()
                 }
             }

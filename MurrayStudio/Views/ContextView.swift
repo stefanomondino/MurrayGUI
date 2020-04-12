@@ -14,6 +14,7 @@ struct ContextView: View {
     @EnvironmentObject var controller: PackagesController
     var body: some View {
         JSONEditorView(controller: controller.contextController.environmentEditor)
+        .padding(4)
     }
 }
 

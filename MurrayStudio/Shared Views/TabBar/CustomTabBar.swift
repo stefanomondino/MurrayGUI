@@ -15,14 +15,16 @@ public struct TabBar<SelectionValue, Content>: View where SelectionValue: Hashab
     }
     private let model: TabBarModel<SelectionValue>
     private let content: Content
+    private let position: Position
+
+    @State private var items: [TabBarItemPreferenceKey.Item] = []
 
     public init(position: Position = .top, selection: Binding<SelectionValue>, @ViewBuilder content: () -> Content) {
         self.model = TabBarModel(selection: selection)
         self.content = content()
         self.position = position
     }
-    let position: Position
-    @State private var items: [TabBarItemPreferenceKey.Item] = []
+
     public var body: some View {
         VStack(spacing: 0) {
             if position == .bottom {
@@ -98,7 +100,7 @@ extension View {
 }
 
 
-struct TabBarItemModifier<SelectionValue: Hashable, Label: View>: ViewModifier {
+ struct TabBarItemModifier<SelectionValue: Hashable, Label: View>: ViewModifier {
     var index: SelectionValue
     var label: Label
 
@@ -115,27 +117,17 @@ struct TabBarItemModifier<SelectionValue: Hashable, Label: View>: ViewModifier {
     }
     @EnvironmentObject var model: TabBarModel<SelectionValue>
 }
-struct TabBarItemSelectedModifier: ViewModifier {
-    var isSelected: Bool
+ struct TabBarItemSelectedModifier: ViewModifier {
 
+    var isSelected: Bool
 
     func body(content: Content) -> some View {
         content
             .foregroundColor(isSelected ? Color("accent") : .secondary)
-//            .opacity(isSelected ? 1 : 0.7)
     }
 }
 
-struct TabBarSizePreferenceKey: PreferenceKey {
-    static func reduce(value: inout CGSize, nextValue: () -> CGSize) {
-        value = nextValue()
-    }
-
-    typealias Value = CGSize
-    static var defaultValue: CGSize = .zero
-}
-
-struct TabBarItemPreferenceKey: PreferenceKey {
+ struct TabBarItemPreferenceKey: PreferenceKey {
 
     struct Item: Identifiable, Hashable {
         static func == (lhs: TabBarItemPreferenceKey.Item, rhs: TabBarItemPreferenceKey.Item) -> Bool {
@@ -148,6 +140,7 @@ struct TabBarItemPreferenceKey: PreferenceKey {
 
         func hash(into hasher: inout Hasher) {
             hasher.combine(id)
+            
         }
         init<V: View>(index: Any, label: V) {
             self.index = index
@@ -164,10 +157,29 @@ struct TabBarItemPreferenceKey: PreferenceKey {
     }
 }
 
-public struct TabBarPlaceholder: View {
+extension View {
+    /// Overlays this view with a view that provides a toolTip with the given string.
+    func toolTip(_ toolTip: String?) -> some View {
+        self.overlay(TooltipView(toolTip))
+    }
+    func toolTip(_ toolTip: Localizations) -> some View {
+        self.toolTip(toolTip.translation)
+    }
+}
 
-    public var body: some View {
-        Color.clear
-        //            .frame(height: 44)
+private struct TooltipView: NSViewRepresentable {
+    let toolTip: String?
+
+    init(_ toolTip: String?) {
+        self.toolTip = toolTip
+    }
+
+    func makeNSView(context: NSViewRepresentableContext<TooltipView>) -> NSView {
+        let view = NSView()
+        view.toolTip = self.toolTip
+        return view
+    }
+
+    func updateNSView(_ nsView: NSView, context: NSViewRepresentableContext<TooltipView>) {
     }
 }

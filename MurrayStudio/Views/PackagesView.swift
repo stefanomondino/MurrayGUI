@@ -35,12 +35,12 @@ struct PackagesView: View {
                 }
                 Spacer()
                 HStack {
-                Button(action: { self.action = .newPackage}) {
-                    Text ("New")
-                }
-                Button(action: { self.action = .clonePackage}) {
-                    Text ("Clone")
-                }
+                    Button(action: { self.action = .newPackage}) {
+                        Text ("New")
+                    }
+                    Button(action: { self.action = .clonePackage}) {
+                        Text ("Clone")
+                    }
                 }
             }.padding(4)
 
@@ -52,7 +52,7 @@ struct PackagesView: View {
                              informativeText: action.description.translation,
                              confirmationTitle: Localizations.create.translation.firstUppercased(),
                              confirm: {
-                self.action = nil
+                                self.action = nil
                                 switch action {
                                 case.clonePackage:
                                     self.controller.clone(from: self.clonePackagePath)
@@ -65,11 +65,11 @@ struct PackagesView: View {
 
             }) {
                 if action == .newPackage {
-                VStack {
-                    TextField(.newPackageFieldTitle, text: self.$newPackageName)
-                    TextField(.newPackageFieldDescription, text: self.$newPackageDescription)
-                    TextField(.newPackageFieldPath, text: self.$newPackagePath)
-                }
+                    VStack {
+                        TextField(.newPackageFieldTitle, text: self.$newPackageName)
+                        TextField(.newPackageFieldDescription, text: self.$newPackageDescription)
+                        TextField(.newPackageFieldPath, text: self.$newPackagePath)
+                    }
                 }
                 else if action == .clonePackage {
                     VStack {
@@ -87,7 +87,9 @@ struct PackagesView: View {
 struct PackageItemView: View {
     let package: ObjectReference<BonePackage>
     var body: some View {
-        ItemView(title: package.object.name, subtitle: "\(package.object.procedures.count)", nsImageName: NSImage.folderName)
+        ItemView(title: package.object.name,
+                 subtitle: "\(package.object.procedures.count)",
+            icon: .googleMaterialDesign(.folder))
     }
 }
 

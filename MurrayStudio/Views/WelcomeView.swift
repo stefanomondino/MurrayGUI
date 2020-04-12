@@ -41,7 +41,7 @@ struct WelcomeView: View {
                         Section(header: Text(.latestDocuments)
                             .textStyle(SubtitleStyle())) {
                                     ForEach(self.controller.history, id: \.self) { item in
-                                        ItemView(title: item.title, subtitle: item.path, nsImageName: NSImage.folderName)
+                                        ItemView(title: item.title, subtitle: item.path, icon: .googleMaterialDesign(.folder))
                                     }
                         }
                     }

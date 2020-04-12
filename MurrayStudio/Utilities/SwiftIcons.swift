@@ -104,7 +104,29 @@ protocol FontProtocol {
  case weather()
  ````
 */
+
+
+struct FontIconView: View {
+    let size: CGFloat
+    private let fontName: String
+    private let text: String
+
+    init(_ icon: FontType, size: CGFloat = 20) {
+        FontLoader.loadFontIfNeeded(fontType: icon)
+        self.text = icon.text ?? ""
+        self.fontName = icon.fontName()
+        self.size = size
+    }
+    var body: some View {
+//        Text("!")
+        Color.clear
+//            .font(.custom(fontName, size: size))
+    }
+}
+
+
 public enum FontType: FontProtocol {
+
     /// It selects dripicon icon for the particular object from the library
     case dripicon(DripiconType)
 
@@ -147,6 +169,7 @@ public enum FontType: FontProtocol {
     /// It selects typIcons icons for the particular object from the library
     case typIcons(TypIconsType)
 
+    
     /**
      This function returns the font name using font type
      */
@@ -331,7 +354,7 @@ public enum DripiconType: Int {
         return dripIcons[rawValue]
     }
 
-    case alarm, alignCenter, alignJustify, alignLeft, alignRight, anchor, archieve, arrowDown, arrowLeft, arrowRight, arrowThinDown, arrowThinLeft, arrowThinRight, arrowThinUp, arrowUp, article, backspace, basket, basketball, batteryEmpty, batteryFull, batteryLow, batteryMedium, bell, blog, bluetooth, bold, bookmark, bookmarks, box, briefcase, brightnessLow, brightnessMax, brightnessMedium, broadcast, browser, browserUpload, brush, calendar, camcorder, camera, card, cart, checklist, checkmark, chevronDown, chevronLeft, chevronRight, chevronUp, clipboard, clock, clockwise, cloud, cloudDownload, cloudUpload, code, contract, contract2, conversation, copy, crop, cross, crosshair, cutlery, deviceDesktop, deviceMobile, deviceTablet, direction, disc, document, documentDelete, documentEdit, documentNew, documentRemove, dot, dots2, dots3, download, duplicate, enter, exit, expand, expand2, experiment, export, feed, flag, flashlight, folder, folderOpen, forward, gaming, gear, graduation, graphBar, graphLine, graphPie, headset, heart, help, home, hourglass, inbox, information, italic, jewel, lifting, lightbulb, link, linkBroken, list, loading, location, lock, lockOpen, mail, map, mediaLoop, mediaNext, mediaPause, mediaPlay, mediaPrevious, mediaRecord, mediaShuffle, mediaStop, medical, menu, message, meter, microphone, minus, monitor, move, music, network1, network2, network3, network4, network5, pamphlet, paperclip, pencil, phone, photo, photoGroup, pill, pin, plus, power, preview, print, pulse, question, reply, replyAll, returnIcon, retweet, rocket, scale, search, shoppingBag, skip, stack, star, stopwatch, store, suitcase, swap, tag, tagDelete, tags, thumbsDown, thumbsUp, ticket, timeReverse, toDo, toggles, trash, trophy, upload, user, userGroup, userId, vibrate, viewApps, viewList, viewListLarge, viewThumb, volumeFull, volumeLow, volumeMedium, volumeOff, wallet, warning, web, weight, wifi, wrong, zoomIn, zoomOut
+    case alarm, alignCenter, alignJustify, alignLeft, alignRight, anchor, archive, arrowDown, arrowLeft, arrowRight, arrowThinDown, arrowThinLeft, arrowThinRight, arrowThinUp, arrowUp, article, backspace, basket, basketball, batteryEmpty, batteryFull, batteryLow, batteryMedium, bell, blog, bluetooth, bold, bookmark, bookmarks, box, briefcase, brightnessLow, brightnessMax, brightnessMedium, broadcast, browser, browserUpload, brush, calendar, camcorder, camera, card, cart, checklist, checkmark, chevronDown, chevronLeft, chevronRight, chevronUp, clipboard, clock, clockwise, cloud, cloudDownload, cloudUpload, code, contract, contract2, conversation, copy, crop, cross, crosshair, cutlery, deviceDesktop, deviceMobile, deviceTablet, direction, disc, document, documentDelete, documentEdit, documentNew, documentRemove, dot, dots2, dots3, download, duplicate, enter, exit, expand, expand2, experiment, export, feed, flag, flashlight, folder, folderOpen, forward, gaming, gear, graduation, graphBar, graphLine, graphPie, headset, heart, help, home, hourglass, inbox, information, italic, jewel, lifting, lightbulb, link, linkBroken, list, loading, location, lock, lockOpen, mail, map, mediaLoop, mediaNext, mediaPause, mediaPlay, mediaPrevious, mediaRecord, mediaShuffle, mediaStop, medical, menu, message, meter, microphone, minus, monitor, move, music, network1, network2, network3, network4, network5, pamphlet, paperclip, pencil, phone, photo, photoGroup, pill, pin, plus, power, preview, print, pulse, question, reply, replyAll, returnIcon, retweet, rocket, scale, search, shoppingBag, skip, stack, star, stopwatch, store, suitcase, swap, tag, tagDelete, tags, thumbsDown, thumbsUp, ticket, timeReverse, toDo, toggles, trash, trophy, upload, user, userGroup, userId, vibrate, viewApps, viewList, viewListLarge, viewThumb, volumeFull, volumeLow, volumeMedium, volumeOff, wallet, warning, web, weight, wifi, wrong, zoomIn, zoomOut
 }
 
 private let dripIcons = ["\u{61}", "\u{62}", "\u{63}", "\u{64}", "\u{65}", "\u{66}", "\u{67}", "\u{68}", "\u{69}", "\u{6a}", "\u{6b}", "\u{6c}", "\u{6d}", "\u{6e}", "\u{6f}", "\u{70}", "\u{71}", "\u{72}", "\u{73}", "\u{74}", "\u{75}", "\u{76}", "\u{77}", "\u{78}", "\u{79}", "\u{7a}", "\u{41}", "\u{42}", "\u{43}", "\u{44}", "\u{45}", "\u{46}", "\u{47}", "\u{48}", "\u{49}", "\u{4a}", "\u{4b}", "\u{4c}", "\u{4d}", "\u{4e}", "\u{4f}", "\u{50}", "\u{51}", "\u{52}", "\u{53}", "\u{54}", "\u{55}", "\u{56}", "\u{57}", "\u{58}", "\u{59}", "\u{5a}", "\u{30}", "\u{31}", "\u{32}", "\u{33}", "\u{34}", "\u{35}", "\u{36}", "\u{37}", "\u{38}", "\u{39}", "\u{21}", "\u{22}", "\u{23}", "\u{24}", "\u{25}", "\u{26}", "\u{27}", "\u{28}", "\u{29}", "\u{2a}", "\u{2b}", "\u{2c}", "\u{2d}", "\u{2e}", "\u{2f}", "\u{3a}", "\u{3b}", "\u{3c}", "\u{3d}", "\u{3e}", "\u{3f}", "\u{40}", "\u{5b}", "\u{5d}", "\u{5e}", "\u{5f}", "\u{60}", "\u{7b}", "\u{7c}", "\u{7d}", "\u{7e}", "\u{5c}", "\u{e000}", "\u{e001}", "\u{e002}", "\u{e003}", "\u{e004}", "\u{e005}", "\u{e006}", "\u{e007}", "\u{e008}", "\u{e009}", "\u{e00a}", "\u{e00b}", "\u{e00c}", "\u{e00d}", "\u{e00e}", "\u{e00f}", "\u{e010}", "\u{e011}", "\u{e012}", "\u{e013}", "\u{e014}", "\u{e015}", "\u{e016}", "\u{e017}", "\u{e018}", "\u{e019}", "\u{e01a}", "\u{e01b}", "\u{e01c}", "\u{e01d}", "\u{e01e}", "\u{e01f}", "\u{e020}", "\u{e021}", "\u{e022}", "\u{e023}", "\u{e024}", "\u{e025}", "\u{e026}", "\u{e027}", "\u{e028}", "\u{e029}", "\u{e02a}", "\u{e02b}", "\u{e02c}", "\u{e02d}", "\u{e02e}", "\u{e02f}", "\u{e030}", "\u{e031}", "\u{e032}", "\u{e033}", "\u{e034}", "\u{e035}", "\u{e036}", "\u{e037}", "\u{e038}", "\u{e039}", "\u{e03a}", "\u{e03b}", "\u{e03c}", "\u{e03d}", "\u{e03e}", "\u{e03f}", "\u{e040}", "\u{e041}", "\u{e042}", "\u{e043}", "\u{e044}", "\u{e045}", "\u{e046}", "\u{e047}", "\u{e048}", "\u{e049}", "\u{e04a}", "\u{e04b}", "\u{e04c}", "\u{e04d}", "\u{e04e}", "\u{e04f}", "\u{e050}", "\u{e051}", "\u{e052}", "\u{e053}", "\u{e054}", "\u{e055}", "\u{e056}", "\u{e057}", "\u{e058}", "\u{e059}", "\u{e05a}", "\u{e05b}", "\u{e05c}", "\u{e05d}", "\u{e05e}", "\u{e05f}", "\u{e060}", "\u{e061}", "\u{e062}", "\u{e063}", "\u{e064}", "\u{e065}", "\u{e066}", "\u{e067}", "\u{e068}", "\u{e069}"]
@@ -514,21 +537,6 @@ private let mapicons = ["\u{e800}", "\u{e801}", "\u{e802}", "\u{e803}", "\u{e804
  For icons, please visit [material icons](https://material.io/icons/)
  Please check this [license](https://github.com/google/material-design-icons/blob/master/LICENSE)
  */
-
-struct GoogleMaterialDesign: View {
-    let size: CGFloat
-    let icon: GoogleMaterialDesignType
-    
-    init(_ icon: GoogleMaterialDesignType, size: CGFloat = 20) {
-        FontLoader.loadFontIfNeeded(fontType: FontType.googleMaterialDesign(icon))
-        self.icon = icon
-        self.size = size
-    }
-    public var body: some View {
-        return Text(icon.text ?? "")
-            .font(.custom(FontType.googleMaterialDesign(icon).fontName(), size: size))
-    }
-}
 
 
 public enum GoogleMaterialDesignType: Int, CaseIterable {

@@ -12,11 +12,11 @@ import SwiftUI
 struct ItemView: View {
     let title: String
     let subtitle: String
-    let nsImageName: String?
+    let icon: FontType?
     var body: some View {
         HStack {
-            if nsImageName != nil {
-                Image(nsImageName: nsImageName!)
+            if icon != nil {
+                FontIconView(icon!, size: 40)
             }
             VStack(alignment: .leading) {
                 Text(title).textStyle(SubtitleStyle())

@@ -12,19 +12,22 @@ struct MainView: View {
     //    @EnvironmentObject var specsController: BonePackagesController
     
     @EnvironmentObject var packagesController: PackagesController
-    @State private var currentTab = 0
+    @State private var currentTab: Int = 0
     var body: some View {
         HSplitView {
             VStack {
                 TabBar(selection: self.$currentTab) {
                     PackagesView()
                         .tabBarItem(0){
-                            GoogleMaterialDesign(.addBox)
+                            FontIconView(.googleMaterialDesign(.archive))
+//                                .toolTip(.packagesTitle)
                     }
-//                        .tag(1)
 
                     ContextView()
-                        .tabBarItem(1){ GoogleMaterialDesign(.settingsApplications)}
+                        .tabBarItem(1){
+                            FontIconView(.googleMaterialDesign(GoogleMaterialDesignType.permIdentity))
+//                            .toolTip(.context)
+                    }
 //                        .tag(2)
                 }
             }
