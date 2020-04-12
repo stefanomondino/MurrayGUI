@@ -19,7 +19,7 @@ struct ItemView: View {
           icon: MaterialDesignIcon? = nil) {
         self.title = title
         self.subtitle = subtitle
-//        self.icon = icon
+        self.icon = icon
     }
     var body: some View {
         HStack {
