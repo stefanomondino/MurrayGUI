@@ -25,8 +25,7 @@ struct ItemsView: View {
                     ) {
                         ForEach(self.controller.files[item]!, id: \.self) { file in
                             ItemView(title: file.file.name,
-                                     subtitle: file.object.to,
-                                     icon: .googleMaterialDesign(.playCircleOutline))
+                                     subtitle: file.object.to)
                                 .tag(file)
                         }
                     }

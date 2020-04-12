@@ -20,13 +20,13 @@ struct MainView: View {
                     PackagesView()
                         .tabBarItem(0){
                             FontIconView(.googleMaterialDesign(.archive))
-//                                .toolTip(.packagesTitle)
+                                .toolTip(.packagesTitle)
                     }
 
                     ContextView()
                         .tabBarItem(1){
                             FontIconView(.googleMaterialDesign(GoogleMaterialDesignType.permIdentity))
-//                            .toolTip(.context)
+                            .toolTip(.context)
                     }
 //                        .tag(2)
                 }

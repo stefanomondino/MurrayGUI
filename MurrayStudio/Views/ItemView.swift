@@ -12,7 +12,15 @@ import SwiftUI
 struct ItemView: View {
     let title: String
     let subtitle: String
-    let icon: FontType?
+    var icon: FontType?
+
+    init (title: String,
+          subtitle: String,
+          icon: FontType? = nil) {
+        self.title = title
+        self.subtitle = subtitle
+//        self.icon = icon
+    }
     var body: some View {
         HStack {
             if icon != nil {

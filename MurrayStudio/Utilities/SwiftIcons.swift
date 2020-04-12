@@ -118,9 +118,8 @@ struct FontIconView: View {
         self.size = size
     }
     var body: some View {
-//        Text("!")
-        Color.clear
-//            .font(.custom(fontName, size: size))
+        Text(text)
+            .font(.custom(fontName, size: size))
     }
 }
 
